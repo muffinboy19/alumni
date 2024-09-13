@@ -1,0 +1,74 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://127.0.0.1:5000/",
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@mui/material": "^5.14.2",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.4",
+    "babel-jest": "^29.6.1",
+    "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.4",
+    "caniuse-lite": "^1.0.30001478",
+    "cryptr": "^6.0.3",
+    "framer-motion": "^11.5.3",
+    "moment": "^2.29.3",
+    "npm-check-updates": "^16.10.12",
+    "pdf-viewer-reactjs": "^2.2.3",
+    "prop-types": "^15.8.1",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.7.2",
+    "react-bootstrap-icons": "^1.10.3",
+    "react-csv": "^2.2.2",
+    "react-dom": "^18.3.1",
+    "react-moment": "^1.1.2",
+    "react-redux": "^7.2.8",
+    "react-router-dom": "^5.3.1",
+    "react-scripts": "^5.0.1",
+    "redux": "^4.2.0",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "socket.io-client": "^4.5.0",
+    "timeago": "^1.6.7",
+    "uuid": "^8.3.2",
+    "web-vitals": "^1.1.2"
+  },
+  "scripts": {
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ],
+    "rules": {
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@types/react-router-dom": "^5.3.3"
+  }
+}
