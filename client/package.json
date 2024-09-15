@@ -2,7 +2,6 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  // add by me
   "proxy": "http://89.116.34.246:5000/",
   "dependencies": {
     "@ckeditor/ckeditor5-build-classic": "^43.1.0",
