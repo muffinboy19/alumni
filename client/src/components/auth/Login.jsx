@@ -27,9 +27,9 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
     login({ email, password });
   };  
 
-  if (isAuthenticated) {
-    return <Redirect to="/feed/topic/Placements?search=" />;
-  }
+  // if (isAuthenticated) {
+  //   return <Redirect to="/feed/topic/Placements?search=" />;
+  // }
 
   const togglePassword = () => {
     if (passwordType === "password") {
