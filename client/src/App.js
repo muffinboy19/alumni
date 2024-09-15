@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 
 import logo from "./019eddbf5bf91320da288c242aefa491.png";
-
+import axios from "axios";
 import Home from "./components/layouts/Home";
 import Navbar from "./components/layouts/Navbar.jsx";
 import { loadUser } from "./actions/auth";
@@ -16,6 +16,9 @@ import Footer from "./components/layouts/Footer";
 import { animate, AnimatePresence, transform } from "framer-motion";
 import { motion } from "framer-motion";
 import { duration } from "moment";
+
+
+axios.defaults.baseURL = "http://89.116.34.246:5000/";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
