@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { duration } from "moment";
 
 
-axios.defaults.baseURL = "http://89.116.34.246:5000/";
+axios.defaults.baseURL = "https://alumni-6jli.onrender.com/";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
