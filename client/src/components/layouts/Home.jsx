@@ -34,9 +34,9 @@ const Home = ({ closeSideNav, isAuth }) => {
   useEffect(() => {
     closeSideNav();
   }, []);
-  // if (isAuth) {
-  //   return <Redirect to="/feed/topic/Placements?search=" />;
-  // }
+  if (isAuth) {
+    return <Redirect to="/feed"/>;
+  }
   return (
     <section className="landing">
       {/* {console.log("react versionnnnn--" + React.version)} */}

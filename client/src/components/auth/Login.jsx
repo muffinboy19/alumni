@@ -30,7 +30,7 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
   };  
 
   if (isAuthenticated) {
-    return <Redirect to="/dash" />;
+    return <Redirect to="/feed" />;
   }
 
   const togglePassword = () => {
