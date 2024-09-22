@@ -17,7 +17,9 @@ import {
 
 // Load User
 export const loadUser = () => async (dispatch) => {
-	const token = localStorage.getItem("token") || "dummy-token"; // Use dummy token if none found
+	const token = localStorage.getItem("token"); // Use dummy token if none found  
+  // Log the token to check if it's being received
+ 	console.log("Token in loadUser:", token);
 	setAuthToken(token); // Set token in headers for authorization
 
 	try {
@@ -27,9 +29,8 @@ export const loadUser = () => async (dispatch) => {
 		payload: res.data,
 	  });
 	} catch (error) {
-	  console.log("error in the loadUser funciton");
-	  console.log(error.message);
-	  dispatch({
+		console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
+	  	dispatch({
 		type: AUTH_ERROR,
 	  });
 	}
