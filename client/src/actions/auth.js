@@ -26,10 +26,9 @@ export const loadUser = () => async (dispatch) => {
 		type: USER_LOADED,
 		payload: res.data,
 	  });
-	  console.log("loadUser code is working till here");
 	} catch (error) {
 	  console.log("error in the loadUser funciton");
-	  console.error(error.message);
+	  console.log(error.message);
 	  dispatch({
 		type: AUTH_ERROR,
 	  });
