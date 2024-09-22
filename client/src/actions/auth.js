@@ -23,8 +23,8 @@ export const loadUser = () => async (dispatch) => {
 	setAuthToken(token); // Set token in headers for authorization
 
 	try {
-	  const res = await axios.get("/api/auth"); // Fetch user data
-	  console.log("this is the response",res);
+		const res = await axios.post("/api/auth", { token });
+		console.log("This is the response:", res);
 	  dispatch({
 		type: USER_LOADED,
 		payload: res.data,

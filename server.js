@@ -15,7 +15,10 @@ const PORT = process.env.PORT || 5000;
 
 http.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
 
-app.use(cors()); 
+app.use(cors({
+	origin: 'https://alumni-coral-three.vercel.app/', // Update with your frontend URL
+	credentials: true,
+  })); 
 
 const io = require("socket.io")(http, {
 	cors: {
