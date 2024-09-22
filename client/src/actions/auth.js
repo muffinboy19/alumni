@@ -39,6 +39,7 @@ export const loadUser = () => async (dispatch) => {
 
 // Login User
 export const login = ({ email, password }) => async (dispatch) => {
+	console.log("Login function called with:", { email, password });
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -49,6 +50,7 @@ export const login = ({ email, password }) => async (dispatch) => {
   
   try {
     const res = await axios.post("/api/auth", body, config);
+	console.log("Login response:", res.data);
     
     // Store the token in localStorage
     localStorage.setItem("token", res.data.token);
