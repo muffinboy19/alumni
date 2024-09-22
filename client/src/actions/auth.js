@@ -24,13 +24,13 @@ export const loadUser = () => async (dispatch) => {
 
 	try {
 	  const res = await axios.get("/api/auth"); // Fetch user data
-	  log.console("this is the response",res);
+	  console.log("this is the response",res);
 	  dispatch({
 		type: USER_LOADED,
 		payload: res.data,
 	  });
 
-	  log.console("there is no error here now ");
+	  console.log("there is no error here now ");
 	} catch (error) {
 		console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
 	  	dispatch({
@@ -38,7 +38,7 @@ export const loadUser = () => async (dispatch) => {
 	  });
 	}
 
-	log.console("end of hte laodUser code");
+	console.log("end of hte laodUser code");
   };
   
 
