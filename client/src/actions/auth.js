@@ -19,13 +19,14 @@ import {
 export const loadUser = () => async (dispatch) => {
 	const token = localStorage.getItem("token") || "dummy-token"; // Use dummy token if none found
 	setAuthToken(token); // Set token in headers for authorization
-	console.log("loadUser code is working till here");
+
 	try {
 	  const res = await axios.get("/api/auth"); // Fetch user data
 	  dispatch({
 		type: USER_LOADED,
 		payload: res.data,
 	  });
+	  console.log("loadUser code is working till here");
 	} catch (error) {
 	  console.log("error in the loadUser funciton");
 	  console.error(error.message);
