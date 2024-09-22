@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 http.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
 
+app.use(cors());
 const io = require("socket.io")(http, {
 	cors: {
 		origin: `${process.env.CLIENT_URL}`,
@@ -71,8 +72,6 @@ var storage_folder = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage_folder });
-
-// app.use(cors());
 
 // upgradeUser();
 
