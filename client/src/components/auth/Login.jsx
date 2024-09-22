@@ -6,6 +6,8 @@ import { login } from "../../actions/auth";
 import { closeSideNav } from "../../actions/alert";
 
 const Login = ({ login, isAuthenticated, closeSideNav }) => {
+
+  console.log("this is the login fucniton");
   const [passwordType, setPasswordType] = useState("password");
   useEffect(() => {
     closeSideNav();
@@ -27,9 +29,9 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
     login({ email, password });
   };  
 
-  // if (isAuthenticated) {
-  //   return <Redirect to="/feed/topic/Placements?search=" />;
-  // }
+  if (isAuthenticated) {
+    return <Redirect to="/dash" />;
+  }
 
   const togglePassword = () => {
     if (passwordType === "password") {

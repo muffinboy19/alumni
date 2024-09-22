@@ -26,6 +26,22 @@ const Event = () => {
   }, []);
 
   let userData = localStorage.getItem("_user_data");
+
+if (userData) {
+  console.log("Raw user data from localStorage:", userData);
+
+  try {
+    userData = JSON.parse(userData);
+    console.log("Parsed user data:", userData);
+  } catch (error) {
+    console.error("Error parsing user data:", error.message);
+  }
+} else {
+  console.warn("No user data found in localStorage.");
+}
+
+  console.log(localStorage.getItem("_user_data")); // Check this value
+
   userData = JSON.parse(userData);
 
   const userID = userData._id;
