@@ -1,6 +1,5 @@
 import axios from "axios";
 import { setAlert } from "./alert";
-import setAuthToken from "../utils/setAuthToken";
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -15,34 +14,29 @@ import {
   CLEAR_REQUESTS,
 } from "./types";
 
-// Load User
+// Load User (without token)
 export const loadUser = () => async (dispatch) => {
-	const token = localStorage.getItem("token"); // Use dummy token if none found  
-  // Log the token to check if it's being received
- 	console.log("Token in loadUser:", token);
-	setAuthToken(token); // Set token in headers for authorization
+  try {
+    const res = await axios.get("/api/auth"); // Simple GET request without token
+    console.log("This is the response:", res);
+    
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
 
-	try {
-		const res = await axios.post("/api/auth", { token });
-		console.log("This is the response:", res);
-	  dispatch({
-		type: USER_LOADED,
-		payload: res.data,
-	  });
+    console.log("User loaded successfully.");
+  } catch (error) {
+    console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
 
-	  console.log("there is no error here now ");
-	} catch (error) {
-		console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
-	  	dispatch({
-		type: AUTH_ERROR,
-	  });
-	}
+  console.log("End of loadUser code");
+};
 
-	console.log("end of hte laodUser code");
-  };
-  
-
-// Login User
+// Login User (without token)
 export const login = ({ email, password }) => async (dispatch) => {
   console.log("Login function called with:", { email, password });
 
@@ -53,23 +47,21 @@ export const login = ({ email, password }) => async (dispatch) => {
   };
 
   const body = JSON.stringify({ email, password });
-  
+
   try {
     const res = await axios.post("/api/auth", body, config);
     console.log("Login response:", res.data);
 
-    // Store the token in localStorage
-    localStorage.setItem("token", res.data.token);
-
+    // Dispatch login success without token storage
     dispatch({
       type: LOGIN_SUCCESS,
-      payload: res.data.token,
+      payload: res.data, // You might want to adjust this depending on your needs
     });
 
     // Load the user after successful login
     dispatch(loadUser());
   } catch (e) {
-	console.log("something is not working ");
+    console.log("Something is not working.");
     console.error(e.response);
     const errors = e.response?.data?.errors;
 
@@ -92,10 +84,10 @@ export const register = (userData) => async (dispatch) => {
   };
 
   const body = JSON.stringify(userData); // Prepare request body
-  
+
   try {
     const res = await axios.post("/api/users/register", body, config);
-    
+
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
@@ -186,7 +178,6 @@ export const verifyResetLink = (user_id, reset_token) => async (dispatch) => {
 
 // Log Out
 export const logOut = () => (dispatch) => {
-  localStorage.removeItem("token"); // Clear token from localStorage
   dispatch({ type: LOG_OUT });
   dispatch({ type: CLEAR_USER });
   dispatch({ type: CLEAR_USERS });
