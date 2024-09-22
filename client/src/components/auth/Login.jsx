@@ -30,7 +30,7 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
   };  
 
   if (isAuthenticated) {
-    return <Redirect to="/feed" />;
+    return <Redirect to="/feed/topic/Placements?search=" />;
   }
 
   const togglePassword = () => {
