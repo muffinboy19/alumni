@@ -15,65 +15,80 @@ import {
 } from "./types";
 
 // Load User (without token)
-export const loadUser = () => async (dispatch) => {
-  try {
-    const res = await axios.get("/api/auth"); // Simple GET request without token
-    console.log("This is the response:", res);
-    
-    dispatch({
-      type: USER_LOADED,
-      payload: res.data,
-    });
-
-    console.log("User loaded successfully.");
-  } catch (error) {
-    console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
-    dispatch({
-      type: AUTH_ERROR,
-    });
-  }
-
-  console.log("End of loadUser code");
-};
+// Load User with email and password
+export const loadUser = (email, password) => async (dispatch) => {
+	const config = {
+	  headers: {
+		"Content-Type": "application/json",
+	  },
+	};
+  
+	const body = JSON.stringify({ email, password }); // Prepare request body
+  
+	try {
+	  const res = await axios.post("/api/auth", body, config); // POST request with email and password
+	  console.log("This is the response:", res);
+	  
+	  dispatch({
+		type: USER_LOADED,
+		payload: res.data,
+	  });
+  
+	  console.log("User loaded successfully.");
+	} catch (error) {
+	  console.log("Error in loadUser function:", error.response ? error.response.data : error.message);
+	  dispatch({
+		type: AUTH_ERROR,
+	  });
+	}
+  
+	console.log("End of loadUser code");
+  };
+  
 
 // Login User (without token)
+// Login User
 export const login = ({ email, password }) => async (dispatch) => {
-  console.log("Login function called with:", { email, password });
-
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
+	console.log("Login function called with:", { email, password });
+  
+	const config = {
+	  headers: {
+		"Content-Type": "application/json",
+	  },
+	};
+  
+	const body = JSON.stringify({ email, password });
+  
+	try {
+	  const res = await axios.post("/api/auth", body, config);
+	  console.log("Login response:", res.data);
+  
+	  // Store the token in localStorage
+	  localStorage.setItem("token", res.data.token);
+  
+	  // Dispatch login success
+	  dispatch({
+		type: LOGIN_SUCCESS,
+		payload: res.data,
+	  });
+  
+	  // Load the user after successful login, passing email and password
+	  dispatch(loadUser(email, password));
+	} catch (e) {
+	  console.log("Something is not working.");
+	  console.error(e.response);
+	  const errors = e.response?.data?.errors;
+  
+	  if (errors) {
+		errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
+	  }
+  
+	  dispatch({
+		type: LOGIN_FAIL,
+	  });
+	}
   };
-
-  const body = JSON.stringify({ email, password });
-
-  try {
-    const res = await axios.post("/api/auth", body, config);
-    console.log("Login response:", res.data);
-
-    // Dispatch login success without token storage
-    dispatch({
-      type: LOGIN_SUCCESS,
-      payload: res.data, // You might want to adjust this depending on your needs
-    });
-
-    // Load the user after successful login
-    dispatch(loadUser());
-  } catch (e) {
-    console.log("Something is not working.");
-    console.error(e.response);
-    const errors = e.response?.data?.errors;
-
-    if (errors) {
-      errors.forEach((err) => dispatch(setAlert(err.msg, "danger")));
-    }
-
-    dispatch({
-      type: LOGIN_FAIL,
-    });
-  }
-};
+  
 
 // Register User
 export const register = (userData) => async (dispatch) => {
