@@ -15,7 +15,8 @@ const PORT = process.env.PORT || 5000;
 
 http.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
 
-app.use(cors());
+app.use(cors()); 
+
 const io = require("socket.io")(http, {
 	cors: {
 		origin: `${process.env.CLIENT_URL}`,
