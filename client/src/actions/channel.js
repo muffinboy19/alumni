@@ -5,7 +5,10 @@ import { setAlert } from "./alert";
 // Get all channels
 export const getAllChannels = () => async (dispatch) => {
     try {
+		console.log("here te getAllChannles function starts");
         const res = await axios.get("/api/channels/all");
+		console.log("this is teh response of channels/all");
+		console.log(res);
         dispatch({
             type: GET_CHANNELS,
             payload: res.data,
