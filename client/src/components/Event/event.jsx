@@ -1,106 +1,101 @@
-import { Card, Button, Form } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import axios from "axios";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-
 const Event = () => {
-  const [EventData, setEventData] = useState([]);
+  const [eventData, setEventData] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     const getData = async () => {
-        try{
-            const data = await axios.get("/api/event/get/getevent");
-            // console.log("event data = ", data.data);
-            let eventData=data.data.reverse();
-            setEventData(eventData);
-            
-        }
-        catch(err){
-            console.log(err);
-        }
+      try {
+        const response = await axios.get("/api/event/get/getevent");
+        const eventData = response.data.reverse();
+        setEventData(eventData);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     getData();
   }, []);
 
-  let userData = localStorage.getItem("_user_data");
+  useEffect(() => {
+    const userData = localStorage.getItem("_user_data");
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        setUserInfo(parsedData);
+      } catch (error) {
+        console.error("Error parsing user data:", error.message);
+      }
+    } else {
+      console.warn("No user data found in localStorage.");
+    }
+  }, []);
 
-if (userData) {
-  console.log("Raw user data from localStorage:", userData);
+  const { _id: userID, name: userName, role: userRole } = userInfo;
 
-  try {
-    userData = JSON.parse(userData);
-    console.log("Parsed user data:", userData);
-  } catch (error) {
-    console.error("Error parsing user data:", error.message);
-  }
-} else {
-  console.warn("No user data found in localStorage.");
-}
-
-  console.log(localStorage.getItem("_user_data")); // Check this value
-
-  userData = JSON.parse(userData);
-
-  const userID = userData._id;
-  const userName = userData.name;
-  const userRole = userData.role;
-
-  const [event_name, set_event_name] = useState("");
-  const [event_description, set_event_description] = useState("");
-  const [event_link, set_event_link] = useState("");
+  const [eventName, setEventName] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
+  const [eventLink, setEventLink] = useState("");
 
   const createEvent = async (e) => {
     e.preventDefault();
 
-    const formdata = {
+    const formData = {
       username: userName,
       userID: userID,
-      event_name: event_name,
-      description: event_description,
-      link: event_link,
+      event_name: eventName,
+      description: eventDescription,
+      link: eventLink,
     };
 
-    const data = await axios.post("/api/event/create-event", formdata);
-    console.log("data saved from frontend ", data);
-    window.location.reload(false);
-  };
-
-  const deleteJob = async (e) => {
-    e.preventDefault();
-    const senddata = {
-      userID: userID,
-      userRole: userRole,
-      eventID: e.target.eventid.value,
-    };
-    // console.log("id = ",e.target.eventid.value);
-    const data = await axios.post("/api/event/deleteevent", senddata);
-    console.log(data.data.invalid_msg);
-    if (data.data.invalid_msg == "invalid") {
-      alert("invalid");
-    } else {
+    try {
+      const response = await axios.post("/api/event/create-event", formData);
+      console.log("Data saved from frontend", response);
       window.location.reload(false);
+    } catch (error) {
+      console.error("Error creating event:", error);
     }
   };
 
-  const generateLink = (link) => {
-    return `/profile/${link}`;
+  const deleteEvent = async (e) => {
+    e.preventDefault();
+    const sendData = {
+      userID,
+      userRole,
+      eventID: e.target.eventid.value,
+    };
+
+    try {
+      const response = await axios.post("/api/event/deleteevent", sendData);
+      console.log(response.data.invalid_msg);
+      if (response.data.invalid_msg === "invalid") {
+        alert("Invalid action");
+      } else {
+        window.location.reload(false);
+      }
+    } catch (error) {
+      console.error("Error deleting event:", error);
+    }
   };
+
+  const generateLink = (link) => `/profile/${link}`;
 
   return (
     <div>
-      <div className="row" style={{justifyContent :"center"}} >
-        {userRole == "Admin" ? (
+      <div className="row" style={{ justifyContent: "center" }}>
+        {userRole === "Admin" && (
           <Link
-          className="btn btn-light my-1"
-          to="/createEvent"
-          style={{ width: "40%" , background: "#79db84" }}
-        >
-          Create New Event
-        </Link>
-        ) : null}
+            className="btn btn-light my-1"
+            to="/createEvent"
+            style={{ width: "40%", background: "#79db84" }}
+          >
+            Create New Event
+          </Link>
+        )}
       </div>
 
       <div
@@ -114,65 +109,51 @@ if (userData) {
           flexWrap: "wrap",
         }}
       >
-        
-        <div className="col" >
-        <h1 style={{textAlign:"center"}}>EVENTS</h1>
-        {EventData.map((ele) => {
-          return (
-            <div className="row" style={{justifyContent:"center"  }}> 
-            <Card style={{ width: "65%", margin: "15px", height: "auto" }}>
-              <Card.Body>
-                
-                <div style={{display:"flex",justifyContent:"space-between"}}>
-                <Card.Title style={{fontSize:"50px"}}>{ele.title}</Card.Title>
-                <Card.Text>
-                  created at - {ele.Event_post_date.slice(0, 10)}{" "}
-                </Card.Text>
-                </div>
-                <Card.Text> {ele.Description}</Card.Text>
-                <div
-                  className="row"
-                  style={{ display: "flex", justifyContent: "space-evenly" }}
-                >
-                  <div className="col" style={{ display: "flex"}}>
-                    <Card.Text style={{marginRight:"50px"}}>
-                      <Button style={{padding:"8px"}}>
-                        <a
-                          href={ele.Link}
-                          target="_blank"
-                          style={{ color: "white" }}
-                        >
-                          Join Here
-                        </a>
-                      </Button>
-                    </Card.Text>
-
+        <div className="col">
+          <h1 style={{ textAlign: "center" }}>EVENTS</h1>
+          {eventData.map((ele) => (
+            <div className="row" style={{ justifyContent: "center" }} key={ele._id}>
+              <Card style={{ width: "65%", margin: "15px", height: "auto" }}>
+                <Card.Body>
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <Card.Title style={{ fontSize: "50px" }}>{ele.title}</Card.Title>
                     <Card.Text>
-                      <form 
-                      onSubmit={(e) => deleteJob(e)}
-                      >
-                        { userRole == "Admin" ? (
-                        
-                        <Button style={{padding:"8px"}}
-                            type="submit"
-                            name="eventid"
-                            variant="danger"
-                            value={ele._id}
-                          >
-                            Delete
-                          </Button>
-                        ) : null}
-                      </form>
+                      Created at - {ele.Event_post_date.slice(0, 10)}
                     </Card.Text>
                   </div>
+                  <Card.Text>{ele.Description}</Card.Text>
+                  <div className="row" style={{ display: "flex", justifyContent: "space-evenly" }}>
+                    <div className="col" style={{ display: "flex" }}>
+                      <Card.Text style={{ marginRight: "50px" }}>
+                        <Button style={{ padding: "8px" }}>
+                          <a href={ele.Link} target="_blank" style={{ color: "white" }}>
+                            Join Here
+                          </a>
+                        </Button>
+                      </Card.Text>
 
-                </div>
-              </Card.Body>
-            </Card>
+                      {userRole === "Admin" && (
+                        <Card.Text>
+                          <form onSubmit={deleteEvent}>
+                            <Button
+                              style={{ padding: "8px" }}
+                              type="submit"
+                              name="eventid"
+                              variant="danger"
+                              value={ele._id}
+                            >
+                              Delete
+                            </Button>
+                          </form>
+                        </Card.Text>
+                      )}
+                    </div>
+                  </div>
+                </Card.Body>
+              </Card>
             </div>
-          );
-        })}
-      </div>
+          ))}
+        </div>
       </div>
     </div>
   );
