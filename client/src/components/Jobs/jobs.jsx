@@ -1,4 +1,4 @@
-import { Card, Button, Form } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -11,8 +11,9 @@ const Job = () => {
   useEffect(() => {
     const getData = async () => {
       try {
+        console.log("getData function starts here (job page)");
         const { data } = await axios.get("/api/job/get/getjob");
-        console.log(data);
+        console.log("Job data received:", data);
         setJobData(data.dt.reverse());
         setArchiveJobData(data.archive);
       } catch (error) {
@@ -24,7 +25,15 @@ const Job = () => {
   }, []);
 
   let userData = localStorage.getItem("_user_data");
+  console.log("User data from localStorage:", userData);
+
+  // Check if userData is valid JSON
   userData = userData ? JSON.parse(userData) : {};
+  if (!userData || typeof userData !== "object") {
+    console.error("Invalid user data:", userData);
+    userData = {}; // Reset to empty object if invalid
+  }
+
   const { _id: userID, name: userName, role: userRole } = userData;
 
   const [jobName, setJobName] = useState("");
@@ -144,7 +153,12 @@ const Job = () => {
                   <div className="col">
                     <Card.Text>
                       <Button>
-                        <a href={ele.Link} target="_blank" rel="noopener noreferrer" style={{ color: "white" }}>
+                        <a
+                          href={ele.Link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "white" }}
+                        >
                           Apply here
                         </a>
                       </Button>
