@@ -42,6 +42,7 @@ const PostForm = ({
 		async function myfunction() {
 			await getRequirePostApproval();
 			await getAllChannels();
+			console.log("all the calling worked");
 		}
 		myfunction().catch(console.error);
 	}, []);
