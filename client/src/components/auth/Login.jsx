@@ -26,14 +26,26 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted");
-    const userData = await login({ email, password });
-    console.log(userData); // Assuming this returns user data on success
-    if (userData) {
-      localStorage.setItem("_user_data", JSON.stringify(userData));
-      console.log("user data is saved here");
-      console.log(userData);
+  
+    // Basic validation
+    if (!email || !password) {
+      console.error("Email and password are required.");
+      return;
+    }
+  
+    try {
+      const userData = await login({ email, password });
+      console.log(userData); // Log userData to see what is returned
+      if (userData) {
+        localStorage.setItem("_user_data", JSON.stringify(userData));
+        console.log("user data is saved here");
+        console.log(userData);
+      }
+    } catch (error) {
+      console.error("Login failed:", error.message); // Log the error message
     }
   };
+  
   
 
   if (isAuthenticated) {
