@@ -29,6 +29,8 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
     const userData = await login({ email, password }); // Assuming this returns user data on success
     if (userData) {
       localStorage.setItem("_user_data", JSON.stringify(userData));
+      console.log("user data is saved here");
+      console.log(userData);
     }
   };
   
