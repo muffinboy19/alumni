@@ -215,7 +215,7 @@ router.post(
 // @desc     get all posts
 // @access   Private
 
-router.get("/search", auth, async (req, res) => {
+router.get("/search", async (req, res) => {
 	try {
 		const searchTerm = req.query.query;
 		const channel_name = req.query.channel_name;

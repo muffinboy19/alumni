@@ -18,7 +18,7 @@ router.post("/create-channel",authAdmin, async (req, res) => {
 	}
 });
 
-router.get("/all", auth, async (req, res) => {
+router.get("/all",  async (req, res) => {
     try {
         const channels = await Channel.find();
 		console.log("channels = ", channels)
