@@ -12,10 +12,11 @@ const Job = () => {
     const getData = async () => {
       try {
         const { data } = await axios.get("/api/job/get/getjob");
+        console.log(data);
         setJobData(data.dt.reverse());
         setArchiveJobData(data.archive);
       } catch (error) {
-        console.error("Error fetching job data: ", error);
+        console.log("Error fetching job data: ", error);
       }
     };
 
