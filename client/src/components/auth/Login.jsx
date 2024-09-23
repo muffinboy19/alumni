@@ -23,11 +23,15 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
   const onChange = (e) =>
     setFormInput({ ...formInput, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted");
-    login({ email, password });
-  };  
+    const userData = await login({ email, password }); // Assuming this returns user data on success
+    if (userData) {
+      localStorage.setItem("_user_data", JSON.stringify(userData));
+    }
+  };
+  
 
   if (isAuthenticated) {
     return <Redirect to="/feed/topic/Placements?search=" />;

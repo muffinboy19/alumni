@@ -5,8 +5,7 @@ import { Link } from "react-router-dom";
 
 const Job = () => {
   const [jobData, setJobData] = useState([]);
-  const [archiveJobData, setArchiveJobData] = useState([]);
-  const [showArchive, setShowArchive] = useState(0);
+  const [userInfo, setUserInfo] = useState({});
 
   useEffect(() => {
     const getData = async () => {
@@ -15,7 +14,6 @@ const Job = () => {
         const { data } = await axios.get("/api/job/get/getjob");
         console.log("Job data received:", data);
         setJobData(data.dt.reverse());
-        setArchiveJobData(data.archive);
       } catch (error) {
         console.log("Error fetching job data: ", error);
       }
@@ -24,48 +22,28 @@ const Job = () => {
     getData();
   }, []);
 
-  let userData = localStorage.getItem("_user_data");
-  console.log("User data from localStorage:", userData);
+  useEffect(() => {
+    const userData = localStorage.getItem("_user_data");
+    console.log("User data from localStorage:", userData);
 
-  // Check if userData is valid JSON
-  userData = userData ? JSON.parse(userData) : {};
-  if (!userData || typeof userData !== "object") {
-    console.error("Invalid user data:", userData);
-    userData = {}; // Reset to empty object if invalid
-  }
-
-  const { _id: userID, name: userName, role: userRole } = userData;
-
-  const [jobName, setJobName] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
-  const [jobLink, setJobLink] = useState("");
-  const [jobDeadline, setJobDeadline] = useState("");
-
-  const createJob = async (e) => {
-    e.preventDefault();
-    const formdata = {
-      username: userName,
-      userID,
-      job_name: jobName,
-      description: jobDescription,
-      link: jobLink,
-      job_deadline: jobDeadline,
-    };
-
-    try {
-      await axios.post("/api/job/create-job", formdata);
-      window.location.reload(false);
-    } catch (error) {
-      console.error("Error creating job: ", error);
+    // Safely parse userData
+    if (userData) {
+      try {
+        const parsedData = JSON.parse(userData);
+        setUserInfo(parsedData);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
     }
-  };
+  }, []);
 
-  const deleteJob = async (e) => {
-    e.preventDefault();
+  const { _id: userID, name: userName, role: userRole } = userInfo;
+
+  const deleteJob = async (jobID) => {
     const sendData = {
       userID,
       userRole,
-      jobID: e.target.jobid.value,
+      jobID,
     };
 
     try {
@@ -73,7 +51,7 @@ const Job = () => {
       if (data.invalid_msg === "invalid") {
         alert("Invalid action");
       } else {
-        window.location.reload(false);
+        setJobData(jobData.filter(job => job._id !== jobID));
       }
     } catch (error) {
       console.error("Error deleting job: ", error);
@@ -167,13 +145,11 @@ const Job = () => {
 
                   <div className="col">
                     <Card.Text>
-                      <form onSubmit={deleteJob}>
-                        {ele.created_by_user === userName || userRole === "Admin" ? (
-                          <Button type="submit" name="jobid" variant="danger" value={ele._id}>
-                            Delete
-                          </Button>
-                        ) : null}
-                      </form>
+                      {ele.created_by_user === userName || userRole === "Admin" ? (
+                        <Button onClick={() => deleteJob(ele._id)} variant="danger">
+                          Delete
+                        </Button>
+                      ) : null}
                     </Card.Text>
                   </div>
                 </div>
