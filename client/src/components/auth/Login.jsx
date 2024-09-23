@@ -26,7 +26,8 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
   const onSubmit = async (e) => {
     e.preventDefault();
     console.log("Form Submitted");
-    const userData = await login({ email, password }); // Assuming this returns user data on success
+    const userData = await login({ email, password });
+    console.log(userData); // Assuming this returns user data on success
     if (userData) {
       localStorage.setItem("_user_data", JSON.stringify(userData));
       console.log("user data is saved here");
