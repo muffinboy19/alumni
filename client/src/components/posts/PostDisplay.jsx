@@ -17,6 +17,7 @@ const PostDisplay = ({
 }) => {
   useEffect(() => {
     getPost(match.params.id);
+    console.log("we got the data for the post");
   }, [getPost, match.params.id]);
 
   const [text, setText] = useState("");

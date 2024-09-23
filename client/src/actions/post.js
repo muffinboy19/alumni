@@ -22,7 +22,7 @@ export const getPosts = (query, channel_name) => async (dispatch) => {
 	try {
 		const params = { query, channel_name};
 		const res = await axios.get("/api/posts/search", { params });
-		// console.log(res.data);
+		console.log("the getPosts code is working");
 		dispatch({
 			type: GET_POSTS,
 			payload: res.data,
