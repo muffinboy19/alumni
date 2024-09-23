@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import Moment from "react-moment";
 import PropTypes from "prop-types";
@@ -7,20 +7,10 @@ import { deleteExperience } from "../../actions/users";
 const Experience = ({ experience, deleteExperience }) => {
     // Retrieve user data from local storage
     let userData = localStorage.getItem("_user_data");
-    
-    if (userData) {
-        console.log("Raw user data from localStorage:", userData);
+    console.log("Raw user data from localStorage:", userData);
 
-        try {
-            userData = JSON.parse(userData);
-            console.log("Parsed user data:", userData);
-        } catch (error) {
-            console.error("Error parsing user data:", error.message);
-        }
-    } else {
-        console.warn("No user data found in localStorage.");
-        userData = {}; // Reset to empty object if invalid
-    }
+    // Initialize userData as an empty object
+    userData = userData ? JSON.parse(userData) : {}; // Parse if it exists
 
     // Ensure experience is an array and has a valid structure
     const validExperience = Array.isArray(experience) ? experience : [];
@@ -64,7 +54,9 @@ const Experience = ({ experience, deleteExperience }) => {
         <React.Fragment>
             <h2 className="my-2" style={{ textAlign: "center" }}>Experience</h2>
             <div className="experience-list">
-                {validExperience.length > 0 ? experiences : <div style={{ textAlign: "center" }}>You have not added any experiences yet</div>}
+                {validExperience.length > 0 ? experiences : (
+                    <div style={{ textAlign: "center" }}>You have not added any experiences yet</div>
+                )}
             </div>
         </React.Fragment>
     );
