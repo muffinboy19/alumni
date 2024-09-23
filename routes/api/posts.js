@@ -221,9 +221,12 @@ router.get("/search", async (req, res) => {
 		const channel_name = req.query.channel_name;
 		var posts = [];
 		if (searchTerm === "") {
+			console.log("here the reueset to show post is made");
+			console.log(req);
 			posts = await Post.find({ channel: channel_name }).sort({
 				date: -1,
 			});
+			console.log("was thsi succesfull ? ",res);
 		} else {
 			posts = await Post.find(
 				{ $text: { $search: searchTerm } },
@@ -242,6 +245,7 @@ router.get("/search", async (req, res) => {
 		console.error(error.message);
 		res.status(500).send("Server Error");
 	}
+
 });
 
 // @route    get api/posts/:id
