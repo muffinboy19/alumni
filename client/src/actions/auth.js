@@ -64,7 +64,8 @@
 		console.log("Login response:", res.data);
 	
 		// Store the token in localStorage
-		localStorage.setItem("token", res.data.token);
+		localStorage.setItem("_user_data", res.data);
+		console.log("data saved");
 	
 		// Dispatch login success
 		dispatch({

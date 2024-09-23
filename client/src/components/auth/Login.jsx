@@ -42,7 +42,7 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
         console.log(userData);
       }
     } catch (error) {
-      console.error("Login failed:", error.message); // Log the error message
+      console.log("Login failed:", error.message); // Log the error message
     }
   };
   
