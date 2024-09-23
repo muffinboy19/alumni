@@ -1,122 +1,102 @@
 import { Card, Button, Form } from "react-bootstrap";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+
 const Job = () => {
   const [ArchiveJobData, setArchiveJobData] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get("/api/job/get/getjob");
-      console.log("d = ", data.data);
-      let DataArchive=data.data.archive.reverse();
-      setArchiveJobData(DataArchive);
+      try {
+        const response = await axios.get("/api/job/get/getjob");
+        const DataArchive = response.data.archive.reverse();
+        setArchiveJobData(DataArchive);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     getData();
   }, []);
 
   let userData = localStorage.getItem("_user_data");
-  userData = JSON.parse(userData);
-
-  const userID = userData._id;
-  const userName = userData.name;
-  const userRole = userData.role;
-
- 
+  userData = userData ? JSON.parse(userData) : {};
+  const { _id: userID, name: userName, role: userRole } = userData;
 
   const deleteJob = async (e) => {
     e.preventDefault();
-    const senddata = {
-      userID: userID,
-      userRole: userRole,
-      jobID: e.target.jobid.value,
-    };
-    // console.log("id = ",e.target.jobid.value);
-    const data = await axios.post("/api/job/deletejob", senddata);
-    console.log(data.data.invalid_msg);
-    if (data.data.invalid_msg == "invalid") {
-      alert("invalid");
-    } else {
-      window.location.reload(false);
+    const jobID = e.target.jobid.value;
+
+    try {
+      const senddata = {
+        userID,
+        userRole,
+        jobID,
+      };
+
+      const response = await axios.post("/api/job/deletejob", senddata);
+      if (response.data.invalid_msg === "invalid") {
+        alert("Invalid action");
+      } else {
+        window.location.reload(false);
+      }
+    } catch (error) {
+      console.error("Error deleting job:", error);
     }
   };
 
-  const generateLink = (link) => {
-    return `/profile/${link}`;
-  };
+  const generateLink = (link) => `/profile/${link}`;
 
-  
   return (
     <div className="row" style={{ minHeight: "100vh" }}>
-        { ArchiveJobData.map((ele) => {
-            return (
-              <Card style={{ width: "35%", margin: "15px", height: "auto" }}>
-                <Card.Body>
-                  <div
-                    style={{ display: "flex", justifyContent: "space-between" }}
+      {ArchiveJobData.map((job) => (
+        <Card key={job._id} style={{ width: "35%", margin: "15px", height: "auto" }}>
+          <Card.Body>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <Card.Text>
+                <a
+                  style={{ fontWeight: "900" }}
+                  href={generateLink(job.userID)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {job.created_by_user}
+                </a>
+              </Card.Text>
+              <Card.Text style={{ fontSize: "10px" }}>
+                Created at - {job.Job_post_date.slice(0, 10)}
+              </Card.Text>
+            </div>
+            <Card.Title>{job.Job_name}</Card.Title>
+            <Card.Text>{job.Description}</Card.Text>
+            <Card.Text>Deadline - {job.Job_deadline.slice(0, 10)}</Card.Text>
+            <div className="row" style={{ display: "flex", justifyContent: "space-evenly" }}>
+              <div className="col">
+                <Button>
+                  <a
+                    href={job.Link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "white" }}
                   >
-                    <Card.Text>
-                      <a
-                        style={{ fontWeight: "900" }}
-                        href={generateLink(ele.userID)}
-                        target="_blank"
-                      >
-                        {ele.created_by_user}
-                      </a>
-                    </Card.Text>
-                    {/* <Card.Text>created at -  {formatDate(ele.Job_post_date)} </Card.Text> */}
-                    <Card.Text style={{ fontSize: "10px" }}>
-                      created at - {ele.Job_post_date.slice(0, 10)}
-                    </Card.Text>
-                  </div>
-
-                  <Card.Title>{ele.Job_name}</Card.Title>
-                  <Card.Text> {ele.Description}</Card.Text>
-                  <Card.Text>
-                    Deadline - {ele.Job_deadline.slice(0, 10)}
-                  </Card.Text>
-
-                  <div
-                    className="row"
-                    style={{ display: "flex", justifyContent: "space-evenly" }}
-                  >
-                    <div className="col">
-                      <Card.Text>
-                        <Button>
-                          <a
-                            href={ele.Link}
-                            target="_blank"
-                            style={{ color: "white" }}
-                          >
-                            Apply here
-                          </a>
-                        </Button>
-                      </Card.Text>
-                    </div>
-
-                    <div className="col">
-                      <Card.Text>
-                        <form onSubmit={(e) => deleteJob(e)}>
-                          {ele.created_by_user == userName ||
-                          userRole == "Admin" ? (
-                            <Button
-                              type="submit"
-                              name="jobid"
-                              variant="danger"
-                              value={ele._id}
-                            >
-                              Delete
-                            </Button>
-                          ) : null}
-                        </form>
-                      </Card.Text>
-                    </div>
-                  </div>
-                </Card.Body>
-              </Card>
-            );
-          })}
-      </div>
+                    Apply here
+                  </a>
+                </Button>
+              </div>
+              {(job.created_by_user === userName || userRole === "Admin") && (
+                <div className="col">
+                  <form onSubmit={deleteJob}>
+                    <Button type="submit" name="jobid" variant="danger" value={job._id}>
+                      Delete
+                    </Button>
+                  </form>
+                </div>
+              )}
+            </div>
+          </Card.Body>
+        </Card>
+      ))}
+    </div>
   );
 };
 

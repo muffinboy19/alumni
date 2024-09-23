@@ -1,23 +1,17 @@
 import { Card, Button, Form } from "react-bootstrap";
 import axios from "axios";
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Job = () => {
-
-
   let userData = localStorage.getItem("_user_data");
-  userData = JSON.parse(userData);
+  userData = userData ? JSON.parse(userData) : {};
+  const { _id: userID, name: userName, role: userRole } = userData;
 
-  const userID = userData._id;
-  const userName = userData.name;
-  const userRole = userData.role;
-
-  const [job_name, set_job_name] = useState("");
-  const [job_description, set_job_description] = useState("");
-  const [job_link, set_job_link] = useState("");
-  const [job_deadline, set_job_deadline] = useState("");
+  const [job_name, setJobName] = useState("");
+  const [job_description, setJobDescription] = useState("");
+  const [job_link, setJobLink] = useState("");
+  const [job_deadline, setJobDeadline] = useState("");
 
   const createJob = async (e) => {
     e.preventDefault();
@@ -29,39 +23,40 @@ const Job = () => {
 
     const formdata = {
       username: userName,
-      userID: userID,
-      job_name: job_name,
+      userID,
+      job_name,
       description: job_description,
       link: job_link,
-      job_deadline: job_deadline,
+      job_deadline,
     };
 
-    const data = await axios.post("/api/job/create-job", formdata);
-    console.log("data saved from frontend ", data);
-    window.location.reload(false);
+    try {
+      const response = await axios.post("/api/job/create-job", formdata);
+      console.log("Job created successfully: ", response.data);
+      window.location.reload(false);
+    } catch (error) {
+      console.error("Error creating job: ", error);
+    }
   };
-
 
   return (
     <>
-    <div>
-      <div className="row" style={{justifyContent :"center"}} >
+      <div>
+        <div className="row" style={{ justifyContent: "center" }}>
           <Link
-          className="btn btn-light my-1"
-          to="/jobs"
-          style={{ width: "40%" , background: "#79db84" }}
-        >
-          Go Back
-        </Link>
+            className="btn btn-light my-1"
+            to="/jobs"
+            style={{ width: "40%", background: "#79db84" }}
+          >
+            Go Back
+          </Link>
+        </div>
       </div>
-    </div>
-    <div className="row" style={{ minHeight: "100vh" }}>
+      <div className="row" style={{ minHeight: "100vh" }}>
         <div className="col-4">
-          {userRole != "student" ? (
+          {userRole !== "student" ? (
             <Form
-              onSubmit={(e) => {
-                createJob(e);
-              }}
+              onSubmit={createJob}
               style={{
                 background: "#e6e6e6",
                 padding: "15px",
@@ -77,16 +72,19 @@ const Job = () => {
                 <Form.Control
                   type="text"
                   placeholder="Enter title"
-                  onChange={(e) => set_job_name(e.target.value)}
+                  value={job_name}
+                  onChange={(e) => setJobName(e.target.value)}
                 />
               </Form.Group>
 
               <Form.Group className="mb-3" controlId="formBasicDescription">
                 <Form.Label>Description</Form.Label>
                 <Form.Control
-                  type="textarea"
-                  placeholder="add description"
-                  onChange={(e) => set_job_description(e.target.value)}
+                  as="textarea"
+                  rows={3}
+                  placeholder="Add description"
+                  value={job_description}
+                  onChange={(e) => setJobDescription(e.target.value)}
                 />
               </Form.Group>
 
@@ -94,36 +92,32 @@ const Job = () => {
                 <Form.Label>Link</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="enter link"
-                  onChange={(e) => set_job_link(e.target.value)}
+                  placeholder="Enter link"
+                  value={job_link}
+                  onChange={(e) => setJobLink(e.target.value)}
                 />
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formBasicLink">
-                <Form.Label>deadline</Form.Label>
-                <Form.Control required
+              <Form.Group className="mb-3" controlId="formBasicDeadline">
+                <Form.Label>Deadline</Form.Label>
+                <Form.Control
                   type="date"
-                  placeholder="enter Deadline"
-                  onChange={(e) => set_job_deadline(e.target.value)}
+                  placeholder="Enter deadline"
+                  value={job_deadline}
+                  onChange={(e) => setJobDeadline(e.target.value)}
                 />
               </Form.Group>
-              <Link to='/jobs'>
-                
-              </Link>
+
               <Button variant="primary" type="submit">
-                  Submit
+                Submit
               </Button>
-              
             </Form>
-          ) : 
-              <h4>Students cannot create Job</h4>
-          }
-
+          ) : (
+            <h4>Students cannot create jobs</h4>
+          )}
         </div>
-
-    </div>
+      </div>
     </>
-
   );
 };
 
