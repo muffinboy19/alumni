@@ -252,7 +252,7 @@ router.get("/search", async (req, res) => {
 // @desc     get post by id
 // @access   Private
 
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
 		if (!post) {
@@ -272,7 +272,7 @@ router.get("/:id", auth, async (req, res) => {
 // @desc     delete post by id
 // @access   Private
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
 		if (!post) {
@@ -297,7 +297,7 @@ router.delete("/:id", auth, async (req, res) => {
 // @desc     Toggle Like of a post
 // @access   Private
 
-router.post("/:id/likes", auth, async (req, res) => {
+router.post("/:id/likes", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
 		if (post === null) {
@@ -358,7 +358,7 @@ router.post("/:id/likes", auth, async (req, res) => {
 // @desc     toggle DisLike of a post
 // @access   Private
 
-router.post("/:id/dislikes", auth, async (req, res) => {
+router.post("/:id/dislikes", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
 		if (post === null) {
@@ -422,7 +422,7 @@ router.post("/:id/dislikes", auth, async (req, res) => {
 // @access   Private
 router.post(
 	"/:id/comments",
-	[auth, [check("text", "Comment cannot be Empty").not().isEmpty()]],
+	[[check("text", "Comment cannot be Empty").not().isEmpty()]],
 	async (req, res) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -469,7 +469,7 @@ router.post(
 // @route    DELETE api/posts/:id/comments/:comment_id
 // @desc     delete comment
 // @access   Private
-router.delete("/:id/comments/:comment_id", auth, async (req, res) => {
+router.delete("/:id/comments/:comment_id", async (req, res) => {
 	try {
 		const post = await Post.findById(req.params.id);
 		const comment = post.comments.find(
@@ -505,7 +505,7 @@ router.delete("/:id/comments/:comment_id", auth, async (req, res) => {
 // 	}
 // });
 
-router.get("/settings/get", auth, async (req, res) => {
+router.get("/settings/get",async (req, res) => {
 	try {
 		const settings = await Setting.find();
 		return res.status(200).json(settings[0].requirePostApproval);
@@ -516,7 +516,7 @@ router.get("/settings/get", auth, async (req, res) => {
 	}
 });
 
-router.put("/settings/set", auth, async (req, res) => {
+router.put("/settings/set", async (req, res) => {
 	try {
 		const settings = await Setting.find();
 		const id = settings[0]._id;
