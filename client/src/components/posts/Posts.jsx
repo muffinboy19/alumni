@@ -33,6 +33,7 @@ const Posts = ({
 		async function getMyData() {
 			closeSideNav();
 			getAllChannels();
+			console.log("post getAllChannel");
 			await getPosts(searchQuery, match.params.channel_name);
 		}
 		getMyData();
