@@ -19,7 +19,7 @@ const corsOptions = {
 	origin: 'https://alumni-connect-iiita.vercel.app/', // Your frontend URL
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
 	credentials: true, // Allow credentials if needed
-  };
+  };i
   
   // Use the CORS middleware
   app.use(cors(corsOptions));
