@@ -107,8 +107,6 @@ router.post(
 // @desc     create a Post Directly
 // @access   Private
 
-const { check, validationResult } = require('express-validator');
-const Filter = require('bad-words');  // Ensure the bad-words package is imported
 
 router.post(
   "/create-post",
