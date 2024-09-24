@@ -68,7 +68,7 @@ function Footer() {
                 fontSize: "2rem",
               }}
             >
-              AlumniConnect
+              IIITA AlumniConnect
             </h2>
             <div className="footer-copyright">
               © 2022 Copyright:{" "}

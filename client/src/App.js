@@ -135,7 +135,7 @@ const InitialTransition = () => {
               fontWeight: 700,
             }}
           >
-            AlumniConnect
+            IIITA AlumniConnect
           </text>
         </motion.svg>
       </motion.div>

@@ -47,10 +47,11 @@ router.post(
 			working_area,
 		} = req.body;
 
+		try {
 		//Check if the user exist
 		let user = await User.findOne({ email });
+		console.log(user);
 
-		try {
 			if (user) {
 				return res
 					.status(400)
@@ -94,6 +95,47 @@ router.post(
 					working_area,
 				});
 			}
+
+
+		if (role === "student") {
+			user = new User({
+				name,
+				email,
+				avatar,
+				password,
+				role,
+				program: program,
+				starting_year: starting_year,
+				passing_year: passing_year,
+			});
+		} else if (role === "faculty") {
+			user = new User({
+				name,
+				email,
+				avatar,
+				password,
+				role,
+				department: department,
+				designation: designation,
+			});
+		} else {
+			user = new User({
+				name,
+				email,
+				avatar,
+				password,
+				role,
+				program: program,
+				starting_year: starting_year,
+				passing_year: passing_year,
+				organisation: organisation,
+				designation: designation,
+				location: location,
+				working_area: working_area,
+			});
+		}
+
+		user.save();
 
 
 		// let user = null;
