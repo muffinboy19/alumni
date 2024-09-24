@@ -17,7 +17,7 @@ const Channel = require("../../models/Channel");
 router.post(
 	"/create-post-request",
 	[
-		auth,
+		
 		[
 			check("text", "Body Text is required").not().isEmpty(),
 			check("heading", "Heading is required").not().isEmpty(),
@@ -110,7 +110,7 @@ router.post(
 router.post(
 	"/create-post",
 	[
-		auth,
+		
 		[
 			check("text", "Body Text is required").not().isEmpty(),
 			check("heading", "Heading is required").not().isEmpty(),
@@ -507,6 +507,7 @@ router.delete("/:id/comments/:comment_id", async (req, res) => {
 
 router.get("/settings/get",async (req, res) => {
 	try {
+		console.log("settings/get is called");
 		const settings = await Setting.find();
 		return res.status(200).json(settings[0].requirePostApproval);
 		// return res.status(200).json(true);
