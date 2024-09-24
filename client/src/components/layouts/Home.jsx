@@ -51,8 +51,8 @@ const Home = ({ closeSideNav, isAuth }) => {
             IIITA AlumniConnect
           </motion.h1>
           <motion.p variants={variants.card} className="hero-text">
-            Create a profile, share and interact <br />
-            with your Alumni Network
+            A community Platform to Bridge The Gap Between Alumni , Students and Faculty  <br />
+          
           </motion.p>
           <motion.div className="auth-buttons" variants={variants.card}>
             <Link
