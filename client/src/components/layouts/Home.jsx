@@ -48,7 +48,7 @@ const Home = ({ closeSideNav, isAuth }) => {
           variants={variants.container}
         >
           <motion.h1 variants={variants.card} className="hero-head">
-            AlumniConnect
+            IIITA AlumniConnect
           </motion.h1>
           <motion.p variants={variants.card} className="hero-text">
             Create a profile, share and interact <br />
