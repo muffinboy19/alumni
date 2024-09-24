@@ -315,7 +315,7 @@ router.post(
 // @desc     get current user
 // @access   Private
 
-router.get("/me", auth, async (req, res) => {
+router.get("/me",  async (req, res) => {
 	try {
 		const user = await User.findById(req.user.id);
 		res.json(user);
@@ -329,7 +329,7 @@ router.get("/me", auth, async (req, res) => {
 // @desc     get all Users
 // @access   Private
 
-router.get("/search/:query", auth, async (req, res) => {
+router.get("/search/:query", async (req, res) => {
 	try {
 		const searchTerm = req.params.query;
 		console.log(searchTerm);
@@ -361,7 +361,7 @@ router.get("/search/:query", auth, async (req, res) => {
 // @desc     get user by id
 // @access   Private
 
-router.get("/:user_id", auth, async (req, res) => {
+router.get("/:user_id",  async (req, res) => {
 	try {
 		const user = await User.findById(req.params.user_id).select(
 			"-password"
@@ -389,8 +389,9 @@ router.get("/:user_id", auth, async (req, res) => {
 // @desc     make admin
 // @access   Private
 
-router.get("/:id/make-admin", authHeadAdmin, async (req, res) => {
+router.get("/:id/make-admin", async (req, res) => {
 	try {
+		console.log("the authHeadAdmin is removed from this ");
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: req.params.id },
 			{ isAdmin: true, adminType: "sub" },
@@ -577,6 +578,7 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
 
 router.get("/:id/block", authHeadAdmin, async (req, res) => {
 	try {
+		console.log("from block authHeadAdmin is removed");
 		const updatedUser = await User.findOneAndUpdate(
 			{ _id: req.params.id },
 			{ blocked: true },
@@ -611,7 +613,7 @@ router.get("/:id/unblock", authHeadAdmin, async (req, res) => {
 });
 
 //get current user's friends
-router.get("/friends/:userId", auth, async (req, res) => {
+router.get("/friends/:userId",  async (req, res) => {
 	try {
 		const user = await User.findById(req.params.userId);
 		if (!user) {
@@ -638,7 +640,7 @@ router.get("/friends/:userId", auth, async (req, res) => {
 
 //follow a user
 
-router.put("/:id/follow", auth, async (req, res) => {
+router.put("/:id/follow",async (req, res) => {
 	if (req.user.id !== req.params.id) {
 		try {
 			const user = await User.findById(req.params.id);
@@ -676,7 +678,7 @@ router.put("/:id/follow", auth, async (req, res) => {
 
 //unfollow a user
 
-router.put("/:id/unfollow", auth, async (req, res) => {
+router.put("/:id/unfollow",  async (req, res) => {
 	if (req.user.id !== req.params.id) {
 		try {
 			const user = await User.findById(req.params.id);
@@ -707,7 +709,7 @@ router.put("/:id/unfollow", auth, async (req, res) => {
 	}
 });
 
-router.get("/type/:user_type", auth, async (req, res) => {
+router.get("/type/:user_type", async (req, res) => {
 	try {
 		let users = null;
 		if (req.params.user_type === "admin") {
@@ -723,7 +725,7 @@ router.get("/type/:user_type", auth, async (req, res) => {
 	}
 });
 // Fetch user's friends(followers)
-router.get("/:userId/friends", auth, async (req, res) => {
+router.get("/:userId/friends", async (req, res) => {
     try {
         const user = await User.findById(req.params.userId).populate("followers"); // Adjust as per your schema
         res.status(200).json(user.followers);
