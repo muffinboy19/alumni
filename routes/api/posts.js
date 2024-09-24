@@ -14,96 +14,85 @@ const Channel = require("../../models/Channel");
 // @route    POST api/posts
 // @desc     create a post request
 // @access   Private
-router.post(
+router.post(router.post(
 	"/create-post-request",
 	[
-		
-		[
-			check("text", "Body Text is required").not().isEmpty(),
-			check("heading", "Heading is required").not().isEmpty(),
-			check(
-				"visibleStudent",
-				"Student visibility value Is required"
-			).isBoolean(),
-			check(
-				"visibleFaculty",
-				"Faculty visibility value Is required"
-			).isBoolean(),
-			check(
-				"visibleAlumni",
-				"Alumni visibility value Is required"
-			).isBoolean(),
-			check("channel", "Channel is Required").not().isEmpty(),
-		],
+	  check("text", "Body Text is required").not().isEmpty(),
+	  check("heading", "Heading is required").not().isEmpty(),
+	  check("visibleStudent", "Student visibility value is required").isBoolean(),
+	  check("visibleFaculty", "Faculty visibility value is required").isBoolean(),
+	  check("visibleAlumni", "Alumni visibility value is required").isBoolean(),
+	  check("channel", "Channel is Required").not().isEmpty(),
 	],
 	async (req, res) => {
-		console.log("create-post-request has started here " );
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
+	  console.log("Route hit: /create-post-request");
+  
+	  // Validate the request
+	  const errors = validationResult(req);
+	  if (!errors.isEmpty()) {
+		return res.status(400).json({ errors: errors.array() });
+	  }
+  
+	  // Profanity filter setup
+	  const filter = new Filter();
+	  const containsBadWords =
+		filter.isProfane(req.body.text) || filter.isProfane(req.body.heading);
+  
+	  if (containsBadWords) {
+		console.log("Bad words detected in text or heading");
+		return res.status(400).json({ errors: [{ msg: "Bad word detected" }] });
+	  }
+  
+	  try {
+		// Ensure the authenticated user exists
+		console.log("Verifying user ID", req.user.id);
+		const user = await User.findById(req.user.id).select("-password");
+		if (!user) {
+		  return res.status(404).json({ msg: "User not found" });
 		}
-
-		const filter = new Filter();
-
-		var containsBadWords =
-			filter.isProfane(req.body.text) ||
-			filter.isProfane(req.body.heading);
-
-		if (containsBadWords) {
-			console.log();
-			return res
-				.status(400)
-				.json({ errors: [{ msg: "Bad word detected" }] });
+  
+		// Extract request data
+		const { text, heading, visibleStudent, visibleFaculty, visibleAlumni, channel, images } = req.body;
+  
+		// Build the visibility array
+		const visible = [];
+		if (visibleStudent) visible.push("student");
+		if (visibleFaculty) visible.push("faculty");
+		if (visibleAlumni) visible.push("alumni");
+  
+		// Check if the channel exists
+		console.log("Checking channel existence for", channel);
+		const result_channel = await Channel.findOne({ name: channel });
+		if (!result_channel) {
+		  return res.status(400).json({ msg: "Channel does not exist" });
 		}
-
-		try {
-			console.log("this is the user id ", req.user.id);
-			const user = await User.findById(req.user.id).select("-password");
-			console.log(req.body);
-			const {
-				text,
-				heading,
-				visibleStudent,
-				visibleFaculty,
-				visibleAlumni,
-				channel,
-				images,
-			} = req.body;
-
-			visible = [];
-
-			if (visibleStudent) {
-				visible.push("student");
-			}
-
-			if (visibleAlumni) {
-				visible.push("alumni");
-			}
-
-			if (visibleFaculty) {
-				visible.push("faculty");
-			}
-
-			const post_request = new PostRequest({
-				heading: heading,
-				text: text,
-				name: user.name,
-				avatar: user.avatar,
-				user: req.user.id,
-				visibility: visible,
-				images: images,
-				channel: channel,
-			});
-
-			const post = await post_request.save();
-			console.log("Post Request sent");
-			res.json(post);
-		} catch (error) {
-			console.error(error.message);
-			res.status(500).send("server error in creating post request");
-		}
+  
+		// Create the post request
+		const postRequest = new PostRequest({
+		  heading,
+		  text,
+		  name: user.name,
+		  avatar: user.avatar,
+		  user: req.user.id,
+		  visibility: visible,
+		  images,
+		  channel,
+		});
+  
+		// Save the post request
+		const post = await postRequest.save();
+		console.log("Post Request successfully created:", post._id);
+  
+		// Return the created post
+		return res.json(post);
+  
+	  } catch (error) {
+		console.error("Server error in creating post request:", error.message);
+		return res.status(500).send("Server error in creating post request");
+	  }
 	}
-);
+  );
+  
 
 // @route    POST api/posts
 // @desc     create a Post Directly
