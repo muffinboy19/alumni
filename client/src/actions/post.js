@@ -288,8 +288,10 @@ export const setRequirePostApproval = (value) => async (dispatch) => {
 
 export const getRequirePostApproval = () => async (dispatch) => {
 	try {
+		console.log(" setting/get getRequiredPostApproval");
 		const res = await axios.get("/api/posts/settings/get");
-
+		console.log("resoponse of the /settings/get",res);
+		
 		dispatch({
 			type: GET_POST_SETTING,
 			payload: res.data,

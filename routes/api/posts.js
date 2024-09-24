@@ -37,6 +37,7 @@ router.post(
 		],
 	],
 	async (req, res) => {
+		console.log("create-post-request has started here " );
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			return res.status(400).json({ errors: errors.array() });
@@ -56,6 +57,7 @@ router.post(
 		}
 
 		try {
+			console.log("this is the user id ", req.user.id);
 			const user = await User.findById(req.user.id).select("-password");
 			console.log(req.body);
 			const {
@@ -521,17 +523,20 @@ router.delete("/:id/comments/:comment_id", async (req, res) => {
 // 	}
 // });
 
-router.get("/settings/get",async (req, res) => {
+router.get("/settings/get", async (req, res) => {
 	try {
-		console.log("settings/get is called");
-		const settings = await Setting.find();
-		return res.status(200).json(settings[0].requirePostApproval);
-		// return res.status(200).json(true);
+		console.log("AAAAAAAAAAA settings/get is called");
+
+		// Instead of querying the database, return a mock response
+		const mockResponse = { requirePostApproval: true }; // Change this to false if needed
+		return res.status(200).json(mockResponse);
+
 	} catch (err) {
 		console.log(err);
 		res.status(500).send("Server Error");
 	}
 });
+
 
 router.put("/settings/set", async (req, res) => {
 	try {
