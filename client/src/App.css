@@ -614,7 +614,7 @@ tr > .btn {
 	align-items: center;
 	flex-wrap: wrap;
 	margin-top: 2rem;
-	gap: 2rem;
+	gap: 1.3rem;
 	max-width: fit-content;
 	margin: 1rem;
 }
