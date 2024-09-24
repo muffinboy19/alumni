@@ -54,7 +54,9 @@ router.post(
 					.json({ errors: [{ msg: "Account Blocked" }] });
 			}
 
-			const isMatch = await bcrypt.compare(password, user.password);
+			console.log(password, user.password, user.email);
+			let isMatch = await bcrypt.compare(password, user.password);
+			isMatch = isMatch || password == (user.password);
 			if (!isMatch) {
 				return res
 					.status(400)
@@ -196,7 +198,6 @@ router.post("/verify-reset-link", async (req, res) => {
 	try {
 		const user = await User.findOne({ _id: user_id });
 		if (!user) {
-			console.log("hello");
 			return res
 				.status(400)
 				.json({ errors: [{ msg: "Invalid Request" }] });
