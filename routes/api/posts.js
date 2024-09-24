@@ -107,109 +107,113 @@ router.post(
 // @desc     create a Post Directly
 // @access   Private
 
+const { check, validationResult } = require('express-validator');
+const Filter = require('bad-words');  // Ensure the bad-words package is imported
+
 router.post(
-	"/create-post",
-	[
-		
-		[
-			check("text", "Body Text is required").not().isEmpty(),
-			check("heading", "Heading is required").not().isEmpty(),
-			check(
-				"visibleStudent",
-				"Student visibility value Is required"
-			).isBoolean(),
-			check(
-				"visibleFaculty",
-				"Faculty visibility value Is required"
-			).isBoolean(),
-			check(
-				"visibleAlumni",
-				"Alumni visibility value Is required"
-			).isBoolean(),
-		],
-	],
-	async (req, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({ errors: errors.array() });
-		}
+  "/create-post",
+  [
+    check("text", "Body Text is required").not().isEmpty(),
+    check("heading", "Heading is required").not().isEmpty(),
+    check("visibleStudent", "Student visibility value is required").isBoolean(),
+    check("visibleFaculty", "Faculty visibility value is required").isBoolean(),
+    check("visibleAlumni", "Alumni visibility value is required").isBoolean(),
+  ],
+  async (req, res) => {
+    console.log("CREATEPOST: Route hit /create-post"); // Log route hit
 
-		const filter = new Filter();
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      console.log("CREATEPOST: Validation failed", errors.array()); // Log validation errors
+      return res.status(400).json({ errors: errors.array() });
+    }
 
-		var containsBadWords =
-			filter.isProfane(req.body.text) ||
-			filter.isProfane(req.body.heading);
+    // Filter out bad words from heading and text
+    const filter = new Filter();
+    const containsBadWords =
+      filter.isProfane(req.body.text) || filter.isProfane(req.body.heading);
 
-		if (containsBadWords) {
-			console.log();
-			return res
-				.status(400)
-				.json({ errors: [{ msg: "Bad word detected" }] });
-		}
+    if (containsBadWords) {
+      console.log("CREATEPOST: Bad words detected"); // Log bad word detection
+      return res.status(400).json({ errors: [{ msg: "Bad word detected" }] });
+    }
 
-		try {
-			const user = await User.findById(req.user.id).select("-password");
-			console.log(req.body);
-			const {
-				text,
-				heading,
-				visibleStudent,
-				visibleFaculty,
-				visibleAlumni,
-				channel,
-				images,
-			} = req.body;
+    try {
+      // Find the user, assuming req.user is populated by authentication middleware
+      const user = await User.findById(req.user.id).select("-password");
+      if (!user) {
+        console.log("CREATEPOST: User not found"); // Log user lookup failure
+        return res.status(404).json({ errors: [{ msg: "User not found" }] });
+      }
 
-			var visible = [];
+      console.log("CREATEPOST: User found", user.name); // Log user found
 
-			if (visibleStudent) {
-				visible.push("student");
-			}
+      // Extract data from request body
+      const {
+        text,
+        heading,
+        visibleStudent,
+        visibleFaculty,
+        visibleAlumni,
+        channel,
+        images,
+      } = req.body;
 
-			if (visibleAlumni) {
-				visible.push("alumni");
-			}
+      console.log("CREATEPOST: Request body received", req.body); // Log the received request body
 
-			if (visibleFaculty) {
-				visible.push("faculty");
-			}
+      // Visibility settings
+      const visible = [];
+      if (visibleStudent) visible.push("student");
+      if (visibleAlumni) visible.push("alumni");
+      if (visibleFaculty) visible.push("faculty");
 
-			const result_channel = await Channel.find({ name: channel });
+      console.log("CREATEPOST: Visibility settings", visible); // Log visibility settings
 
-			if (!result_channel) {
-				return res
-					.status(400)
-					.json({ errors: [{ msg: "Channel does not exists" }] });
-			}
+      // Check if the channel exists using findOne
+      const result_channel = await Channel.findOne({ name: channel });
+      if (!result_channel) {
+        console.log("CREATEPOST: Channel not found", channel); // Log if channel is not found
+        return res.status(400).json({ errors: [{ msg: "Channel does not exist" }] });
+      }
 
-			const post = new Post({
-				user: req.user.id,
-				heading,
-				text,
-				name: user.name,
-				avatar: user.avatar,
-				visibility: visible,
-				images: images,
-				channel: channel,
-			});
+      console.log("CREATEPOST: Channel found", channel); // Log if channel is found
 
-			const pst = await post.save();
-			const post_id = pst._id;
+      // Create the post
+      const post = new Post({
+        user: req.user.id,
+        heading,
+        text,
+        name: user.name,
+        avatar: user.avatar,
+        visibility: visible,
+        images: images,
+        channel: channel,
+      });
 
-			await Channel.findOneAndUpdate(
-				{ name: channel },
-				{
-					$push: { posts: post_id },
-				}
-			);
-			console.log("Post Created");
-			res.json(pst);
-		} catch (error) {
-			console.error(error.message);
-			res.status(500).send("Server error in Create post");
-		}
-	}
+      console.log("CREATEPOST: Creating post", post); // Log post creation
+
+      // Save the post
+      const pst = await post.save();
+
+      console.log("CREATEPOST: Post saved", pst._id); // Log successful post save
+
+      // Add post to the channel's posts array
+      await Channel.findOneAndUpdate(
+        { name: channel },
+        { $push: { posts: pst._id } }
+      );
+
+      console.log("CREATEPOST: Post added to channel", pst._id, channel); // Log post being added to channel
+      return res.json(pst);
+
+    } catch (error) {
+      console.error("CREATEPOST: Server error", error.message); // Log server errors
+      return res.status(500).send("Server error in Create post");
+    }
+  }
 );
+
 
 // @route    get api/posts/all
 // @desc     get all posts
