@@ -137,7 +137,7 @@ router.post(
 		}
 
 		user.save();
-
+		console.log(user);
 
 			// user = new User({
 			// 	name,
