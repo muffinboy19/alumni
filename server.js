@@ -16,10 +16,10 @@ const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
 
 const corsOptions = {
-	origin: 'https://alumni-connect-iiita.vercel.app/', // Your frontend URL
+	origin: 'https://alumni-connect-iiita.vercel.app', // Your frontend URL
 	methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
 	credentials: true, // Allow credentials if needed
-  };i
+  };
   
   // Use the CORS middleware
   app.use(cors(corsOptions));
