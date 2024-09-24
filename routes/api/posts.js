@@ -215,42 +215,54 @@ if (!result_channel) {
 );
 
 
-// @route    get api/posts/all
-// @desc     get all posts
+// @route    get api/posts/search
+// @desc     get all posts for a specific channel
 // @access   Private
-
 router.get("/search", async (req, res) => {
 	try {
-		const searchTerm = req.query.query;
-		const channel_name = req.query.channel_name;
+		const searchTerm = req.query.query; // Get search term from query parameters
+		const channel_name = req.query.channel_name; // Get channel name from query parameters
+
+		console.log("Search Term:", searchTerm); // Log the search term
+		console.log("Channel Name:", channel_name); // Log the channel name
+
 		var posts = [];
 		if (searchTerm === "") {
-			console.log("here the reueset to show post is made");
-			console.log(req);
-			posts = await Post.find({ channel: channel_name }).sort({
-				date: -1,
-			});
-			console.log("was thsi succesfull ? ",res);
+			// If no search term, retrieve all posts from the specified channel
+			console.log("Fetching all posts for channel:", channel_name); // Log fetching action
+			posts = await Post.find({ channel: channel_name }).sort({ date: -1 });
+
+			console.log("Posts retrieved:", posts); // Log the retrieved posts
 		} else {
+			// If there's a search term, search for posts matching the term
+			console.log("Searching posts with term:", searchTerm); // Log search action
 			posts = await Post.find(
 				{ $text: { $search: searchTerm } },
 				{ score: { $meta: "textScore" } }
 			).sort({ score: { $meta: "textScore" } });
 
+			console.log("Posts matching search term:", posts); // Log matching posts
+
+			// Filter the results to only include posts from the specified channel
 			const tmp = posts.filter((p) => {
 				return p.channel === channel_name;
 			});
 
-			posts = tmp;
+			posts = tmp; // Update posts to only include the filtered results
+			console.log("Filtered posts for channel:", channel_name, ":", posts); // Log filtered posts
 		}
 
-		res.json(posts);
+		if (posts.length === 0) {
+			console.log("No posts found for channel:", channel_name); // Log if no posts are found
+		}
+
+		res.json(posts); // Return the posts in the response
 	} catch (error) {
-		console.error(error.message);
+		console.error("Error occurred while fetching posts:", error.message); // Log the error message
 		res.status(500).send("Server Error");
 	}
-
 });
+
 
 // @route    get api/posts/:id
 // @desc     get post by id
@@ -509,17 +521,20 @@ router.delete("/:id/comments/:comment_id", async (req, res) => {
 // 	}
 // });
 
-router.get("/settings/get",async (req, res) => {
+router.get("/settings/get", async (req, res) => {
 	try {
-		console.log("settings/get is called");
-		const settings = await Setting.find();
-		return res.status(200).json(settings[0].requirePostApproval);
-		// return res.status(200).json(true);
+		console.log("AAAAAAAAAAA settings/get is called");
+
+		// Instead of querying the database, return a mock response
+		const mockResponse = { requirePostApproval: true }; // Change this to false if needed
+		return res.status(200).json(mockResponse);
+
 	} catch (err) {
 		console.log(err);
 		res.status(500).send("Server Error");
 	}
 });
+
 
 router.put("/settings/set", async (req, res) => {
 	try {
