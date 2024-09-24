@@ -202,7 +202,7 @@ const Navbar = ({
         </Link>
       </li>
       <li>
-        <Link to="/help" className="navbar-link hero-nav-links">
+        <Link to="/About" className="navbar-link hero-nav-links">
           <span className="hide-sm nav-lt" style={navLinkColor}>
             About
           </span>
