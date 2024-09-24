@@ -47,10 +47,10 @@ router.post(
 			working_area,
 		} = req.body;
 
+		try {
 		//Check if the user exist
 		let user = await User.findOne({ email });
 		console.log(user);
-		try {
 
 			if (user) {
 				return res
@@ -96,8 +96,6 @@ router.post(
 				});
 			}
 
-
-		let user = null;
 
 		if (role === "student") {
 			user = new User({
