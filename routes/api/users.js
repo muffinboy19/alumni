@@ -332,30 +332,40 @@ router.get("/me",  async (req, res) => {
 router.get("/search/:query", async (req, res) => {
 	try {
 		const searchTerm = req.params.query;
-		console.log(searchTerm);
-		var users = [];
-		if (searchTerm === "all") {
-			users = await User.find();
-			console.log("inside get all user api");
-			if (users) {
-				console.log("NON ZERO USERS" + users.length);
-			}
+		console.log("inside search users with term: " + searchTerm);
+		const users = await User.find(
+			{ $text: { $search: searchTerm } },
+			{ score: { $meta: "textScore" } }
+		).sort({ score: { $meta: "textScore" } });
+
+		if (users && users.length > 0) {
+			console.log("NON zero search USERS: " + users.length);
+			res.json(users);
 		} else {
-			console.log("inside search users");
-			users = await User.find(
-				{ $text: { $search: searchTerm } },
-				{ score: { $meta: "textScore" } }
-			).sort({ score: { $meta: "textScore" } });
-			if (users) {
-				console.log("NON zero search USERS" + users.length);
-			}
+			res.status(404).json({ msg: "No users found for this search" });
 		}
-		res.json(users);
 	} catch (err) {
-		// console.error(err.message);
+		res.status(500).json({ msg: "Server Error in searching Users" });
+	}
+});
+
+router.get("/users", async (req, res) => {
+	try {
+		const users = await User.find();
+		console.log("inside get all user api");
+
+		if (users && users.length > 0) {
+			console.log("NON ZERO USERS: " + users.length);
+			res.json(users);
+		} else {
+			res.status(404).json({ msg: "No users found" });
+		}
+	} catch (err) {
 		res.status(500).json({ msg: "Server Error in getting all Users" });
 	}
 });
+
+
 
 // @route    GET api/users/:user_id
 // @desc     get user by id

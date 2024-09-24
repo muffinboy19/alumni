@@ -171,11 +171,13 @@ router.post(
       console.log("CREATEPOST: Visibility settings", visible); // Log visibility settings
 
       // Check if the channel exists using findOne
-      const result_channel = await Channel.findOne({ name: channel });
-      if (!result_channel) {
-        console.log("CREATEPOST: Channel not found", channel); // Log if channel is not found
-        return res.status(400).json({ errors: [{ msg: "Channel does not exist" }] });
-      }
+      // Check if the channel exists using findOne
+const result_channel = await Channel.findOne({ name: channel });
+if (!result_channel) {
+    console.log("CREATEPOST: Channel not found", channel); // Log if channel is not found
+    return res.status(400).json({ errors: [{ msg: "Channel does not exist" }] });
+}
+
 
       console.log("CREATEPOST: Channel found", channel); // Log if channel is found
 
