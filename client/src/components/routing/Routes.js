@@ -22,6 +22,7 @@ import PostForm from "../posts/PostForm";
 import PostDisplay from "../posts/PostDisplay";
 import Profiles from "../profiles/Profiles";
 import Help from "../layouts/Help";
+import About from "../layouts/About"
 import Achievement from "../layouts/Achievement";
 import Messenger from "../messenger/Messenger";
 
@@ -75,6 +76,11 @@ const Routes = () => {
         <Route exact path="/help">
           <motion.div exit={{ opacity: 0 }}>
             <Help />
+          </motion.div>
+        </Route>
+        <Route exact path="/About">
+          <motion.div exit={{ opacity: 0 }}>
+            <About />
           </motion.div>
         </Route>
         <PrivateRoute exact path="/userprofile" component={Dashboard} />
