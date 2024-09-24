@@ -37,9 +37,9 @@ a:hover {
   text-decoration: none;
 }
 
-html ::-webkit-scrollbar {
+/* html ::-webkit-scrollbar {
   display: none;
-}
+} */
 
 body {
   overflow-x: hidden;

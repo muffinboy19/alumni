@@ -10,17 +10,14 @@ import {
 	DELETE_POST,
 	CREATE_POST,
 	REMOVE_COMMENT,
-	CREATE_POST_REQUEST,
 	ADD_COMMENT,
-	SET_POST_SETTING,
-	GET_POST_SETTING,
-} from "./types";
+} from "./types"; // Removed CREATE_POST_REQUEST, SET_POST_SETTING, and GET_POST_SETTING since we no longer need them
 import { setAlert } from "./alert";
 
 // get posts
 export const getPosts = (query, channel_name) => async (dispatch) => {
 	try {
-		const params = { query, channel_name};
+		const params = { query, channel_name };
 		const res = await axios.get("/api/posts/search", { params });
 		console.log("the getPosts code is working");
 		dispatch({
@@ -123,16 +120,11 @@ export const createPost = (formData) => async (dispatch) => {
 	};
 
 	try {
-		const res = await axios.post(
-			"/api/posts/create-post",
-			formData,
-			config
-		);
+		const res = await axios.post("/api/posts/create-post", formData, config);
 		dispatch({
 			type: CREATE_POST,
 			payload: res.data,
 		});
-
 
 		dispatch(setAlert("Post created", "safe"));
 		return 1;
@@ -158,10 +150,7 @@ export const createPost = (formData) => async (dispatch) => {
 
 export const addComment = (post_id, formData) => async (dispatch) => {
 	try {
-		const res = await axios.post(
-			`/api/posts/${post_id}/comments`,
-			formData
-		);
+		const res = await axios.post(`/api/posts/${post_id}/comments`, formData);
 
 		dispatch({
 			type: ADD_COMMENT,
@@ -189,50 +178,6 @@ export const addComment = (post_id, formData) => async (dispatch) => {
 	}
 };
 
-export const createPostRequest = (formData) => async (dispatch) => {
-	const config = {
-		headers: {
-			"Content-Type": "application/json",
-		},
-	};
-
-	try {
-		console.log("FORM DATA = ",formData)
-		const res = await axios.post(
-			"/api/posts/create-post-request",
-			formData,
-			config
-		);
-		dispatch({
-			type: CREATE_POST_REQUEST,
-			payload: res.data,
-		});
-
-		dispatch(setAlert("Post Request Sent", "safe"));
-		return 1;
-	} catch (err) {
-		console.log(err.response);
-		let errors = null;
-		if (err.response) {
-			errors = err.response.data.errors;
-			if (errors) {
-				errors.forEach((e) => {
-					dispatch(setAlert(e.msg, "danger"));
-				});
-			}
-
-			dispatch({
-				type: POST_ERROR,
-				payload: {
-					msg: err.response.statusText,
-					status: err.response.status,
-				},
-			});
-			return 0;
-		}
-	}
-};
-
 export const deleteComment = (postId, commentId) => async (dispatch) => {
 	try {
 		await axios.delete(`/api/posts/${postId}/comments/${commentId}`);
@@ -254,56 +199,4 @@ export const deleteComment = (postId, commentId) => async (dispatch) => {
 	}
 };
 
-export const setRequirePostApproval = (value) => async (dispatch) => {
-	try {
-		const config = {
-			headers: {
-				"Content-Type": "application/json",
-			},
-		};
-
-		const body = {
-			requireApproval: value,
-		};
-
-		console.log("inside set function actions");
-		console.log(value);
-		await axios.put("/api/posts/settings/set", body, config);
-
-		console.log("request completed");
-		dispatch({
-			type: SET_POST_SETTING,
-			payload: value,
-		});
-	} catch (err) {
-		dispatch({
-			type: POST_ERROR,
-			payload: {
-				msg: err.response.statusText,
-				status: err.response.status,
-			},
-		});
-	}
-};
-
-export const getRequirePostApproval = () => async (dispatch) => {
-	try {
-		console.log(" setting/get getRequiredPostApproval");
-		const res = await axios.get("/api/posts/settings/get");
-		console.log("resoponse of the /settings/get",res);
-		dispatch({
-			type: GET_POST_SETTING,
-			payload: res.data,
-		});
-
-		return res.data;
-	} catch (err) {
-		dispatch({
-			type: POST_ERROR,
-			payload: {
-				msg: err.response.statusText,
-				status: err.response.status,
-			},
-		});
-	}
-};
+// Removed setRequirePostApproval and getRequirePostApproval functions as they are no longer needed
