@@ -152,7 +152,7 @@ function Footer() {
                 className="contact-info contact-info-text"
                 style={{ fontSize: "15px" }}
               >
-                Office of Alumni Affairs Admin Extension-1, IIIT Allahabad,
+                Office of Alumni Affairs , Admin Building, IIIT Allahabad,
                 Devghat, Jhalwa Prayagraj - 211015 Uttar Pradesh, India
               </p>
             </div>
@@ -160,7 +160,7 @@ function Footer() {
               <i className="fa fa-envelope mail-icon"></i>
               <div className="contact-info">
                 <p className="contact-info-text" style={{ fontSize: "15px" }}>
-                  alumni.coordinator@iiita.ac.in
+                  alumni.office@iiita.ac.in
                 </p>
                 <p className="contact-info-text" style={{ fontSize: "15px" }}>
                   alumni.connect@iiita.ac.in
