@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { getPost, addComment } from "../../actions/post";
 import SingleComment from "./SingleComment";
 import parse from "html-react-parser";
-import NotAuthorized from "../layouts/NotAuthorized";
 
 const PostDisplay = ({
   getPost,
@@ -33,16 +32,11 @@ const PostDisplay = ({
 
   return (
     <Fragment>
-      {loading || post === null || authUser === null ? (
+      {loading || post === null ? (
         <Spinner />
-      ) : post.visibility.includes(authUser.role) ||
-        post.user === authUser._id ||
-        authUser.isAdmin ? (
+      ) : (
         <Fragment>
-          <div
-            className="container my-container"
-            // style={{ marginTop: "1em", marginBottom: "1em" }}
-          >
+          <div className="container my-container">
             <div className="row heading-area">
               <button
                 className="btn btn-light"
@@ -71,7 +65,7 @@ const PostDisplay = ({
                         maxHeight: "500px",
                         maxWidth: "700px",
                       }}
-                    ></img>
+                    />
                   );
                 })}
             </div>
@@ -107,7 +101,7 @@ const PostDisplay = ({
                       viewBox="0 0 24 24"
                       className="comment-submit-button"
                     >
-                      <path d="M2 3v18l20-9L2 3zm2 11l9-2-9-2V6.09L17.13 12 4 17.91V14z"></path>
+                      <path d="M2 3v18l20-9L2 3zm2 11l9-2-9-2V6.09L17.13 12 4 17.91V14z" />
                     </svg>
                   </a>
                 </div>
@@ -125,8 +119,6 @@ const PostDisplay = ({
             </div>
           </div>
         </Fragment>
-      ) : (
-        <NotAuthorized />
       )}
     </Fragment>
   );
