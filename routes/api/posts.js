@@ -387,6 +387,7 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/:id/likes", async (req, res) => {
 	try {
+		console.log("User ID:", req.user.id);
 		const post = await Post.findById(req.params.id);
 		if (post === null) {
 			return res.status(404).json({ msg: "Post Not found" });
