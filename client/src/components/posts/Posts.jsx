@@ -185,19 +185,22 @@ const Posts = ({
 							{posts !== null && posts.length === 0 && (
 								<h3 style={{ textAlign: "center" }}>No Posts to Display</h3>
 							)}
+							console.log("user is ", authUser)
 							{posts !== null &&
 								posts.map((pst) => {
 									console.log(pst);
-									if (
+									{
+										/* if (
 										authUser !== null &&
 										(pst.visibility.includes(authUser.role) ||
 											pst.user === authUser._id ||
 											authUser.isAdmin)
 									) {
-										return <PostCard key={pst._id} post={pst} />;
 									} else {
 										return <h1>Not visible to you</h1>;
+									} */
 									}
+									return <PostCard key={pst._id} post={pst} />;
 								})}
 						</div>
 					</div>
