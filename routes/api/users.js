@@ -19,7 +19,7 @@ router.post(
 	"/register",
 	[
 		check("name", "Name is required!").not().isEmpty(),
-		check("email", "Please include a valid email! ").isEmail(),
+		check("email", "Please include a valid email!").isEmail(),
 		check("password", "Enter a password with 6 or more letters!").isLength({
 			min: 6,
 		}),
@@ -27,9 +27,7 @@ router.post(
 	],
 	async (req, res) => {
 		const errors = validationResult(req);
-		console.log(errors);
 		if (!errors.isEmpty()) {
-			console.log("Returning from  here");
 			return res.status(400).json({ errors: errors.array() });
 		}
 		const {
@@ -48,10 +46,8 @@ router.post(
 		} = req.body;
 
 		try {
-		//Check if the user exist
-		let user = await User.findOne({ email });
-		console.log(user);
-
+			// Check if the user already exists
+			let user = await User.findOne({ email });
 			if (user) {
 				return res
 					.status(400)
@@ -60,11 +56,12 @@ router.post(
 
 			const avatar = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
 
-			request = null;
+			// Create a new user based on the role
 			if (role === "student") {
-				request = new JoinRequest({
+				user = new User({
 					name,
 					email,
+					avatar,
 					password,
 					role,
 					program,
@@ -72,18 +69,20 @@ router.post(
 					passing_year,
 				});
 			} else if (role === "faculty") {
-				request = new JoinRequest({
+				user = new User({
 					name,
 					email,
+					avatar,
 					password,
 					role,
 					department,
 					designation,
 				});
 			} else if (role === "alumni") {
-				request = new JoinRequest({
+				user = new User({
 					name,
 					email,
+					avatar,
 					password,
 					role,
 					program,
@@ -96,307 +95,22 @@ router.post(
 				});
 			}
 
-
-		if (role === "student") {
-			user = new User({
-				name,
-				email,
-				avatar,
-				password,
-				role,
-				program: program,
-				starting_year: starting_year,
-				passing_year: passing_year,
-			});
-		} else if (role === "faculty") {
-			user = new User({
-				name,
-				email,
-				avatar,
-				password,
-				role,
-				department: department,
-				designation: designation,
-			});
-		} else {
-			user = new User({
-				name,
-				email,
-				avatar,
-				password,
-				role,
-				program: program,
-				starting_year: starting_year,
-				passing_year: passing_year,
-				organisation: organisation,
-				designation: designation,
-				location: location,
-				working_area: working_area,
-			});
-		}
-
-		user.save();
-
-
-		// let user = null;
-
-		// if (role === "student") {
-		// 	user = new User({
-		// 		name,
-		// 		email,
-		// 		avatar,
-		// 		password,
-		// 		role,
-		// 		program: program,
-		// 		starting_year: starting_year,
-		// 		passing_year: passing_year,
-		// 	});
-		// } else if (role === "faculty") {
-		// 	user = new User({
-		// 		name,
-		// 		email,
-		// 		avatar,
-		// 		password,
-		// 		role,
-		// 		department: department,
-		// 		designation: designation,
-		// 	});
-		// } else {
-		// 	user = new User({
-		// 		name,
-		// 		email,
-		// 		avatar,
-		// 		password,
-		// 		role,
-		// 		program: program,
-		// 		starting_year: starting_year,
-		// 		passing_year: passing_year,
-		// 		organisation: organisation,
-		// 		designation: designation,
-		// 		location: location,
-		// 		working_area: working_area,
-		// 	});
-		// }
-
-		// user.save();
-		// console.log(user);
-
-			// user = new User({
-			// 	name,
-			// 	email,
-			// 	avatar,
-			// 	password,
-			// 	role,
-			// 	department,
-			// 	designation
-			// })
-
-			// user.password = await bcrypt.hash(password, salt);
-			// savedUser = await user.save();
-			// return res.json(savedUser);
+			// Hash the password
 			const salt = await bcrypt.genSalt(10);
-			request.password = await bcrypt.hash(password, salt);
-			console.log("Before saving request:", request);
-			savedRequest = await request.save();
-			console.log("After saving request:", savedRequest);
+			user.password = await bcrypt.hash(password, salt);
 
-			console.log("Join Request sent");
+			// Save the user directly without approval
+			await user.save();
 
-			const studentOptions = {
-				sender: name,
-				from: {
-					name: name,
-					address: email,
-				},
-				to: process.env.EMAIL,
-				subject: `${name} wants to join IIITA AlumniConnect as a ${role}`,
-				html: `<!DOCTYPE html>
-				<html lang="en">
-					<head>
-						<style>
-							html {
-								text-align: center;
-							}
-				
-							table,
-							th,
-							td,
-							tr {
-								border: 10px solid black;
-								border-collapse: collapse;
-								padding: 100px;
-							};
-						</style>
-				
-						<meta charset="UTF-8" />
-						<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-						<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-						<table>
-							<tr>
-								<td>Name</td>
-								<td>${name}</td>
-							</tr>
-							<tr>
-								<td>Batch</td>
-								<td>${starting_year}-${passing_year}</td>
-							</tr>
-							<tr>
-								<td>Course</td>
-								<td style="text-transform: uppercase">${program}</td>
-							</tr>
-						</table>
-					</head>
-					<body></body>
-				</html>
-				`,
-			};
-
-			const facultyOptions = {
-				sender: name,
-				from: {
-					name: name,
-					address: email,
-				},
-				to: process.env.EMAIL,
-				subject: `${name} wants to join IIITA AlumniConnect as a ${role}`,
-				html: `<!DOCTYPE html>
-				<html lang="en">
-					<head>
-						<style>
-							html {
-								text-align: center;
-							}
-				
-							table,
-							th,
-							td,
-							tr {
-								border: 10px solid black;
-								border-collapse: collapse;
-								padding: 100px;
-							};
-						</style>
-				
-						<meta charset="UTF-8" />
-						<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-						<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-						<table>
-							<tr>
-								<td>Name</td>
-								<td>${name}</td>
-							</tr>
-							<tr>
-								<td>Department</td>
-								<td>${department}</td>
-							</tr>
-							<tr>
-								<td>Designation</td>
-								<td>${designation}</td>
-							</tr>
-						</table>
-					</head>
-					<body></body>
-				</html>
-				`,
-			};
-
-			const alumniOptions = {
-				sender: name,
-				from: {
-					name: name,
-					address: email,
-				},
-				to: process.env.EMAIL,
-				subject: `${name} wants to join IIITA AlumniConnect as an ${role}`,
-				html: `<!DOCTYPE html>
-				<html lang="en">
-					<head>
-					<style>
-					html {
-						text-align: center;
-					}
-		
-					table,
-					th,
-					td,
-					tr {
-						border: 10px solid black;
-						border-collapse: collapse;
-						padding: 100px;
-					};
-				</style>
-				
-						<meta charset="UTF-8" />
-						<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-						<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-						<table>
-							<tr>
-								<td>Name</td>
-								<td>${name}</td>
-							</tr>
-							<tr>
-								<td>Batch</td>
-								<td>${starting_year}-${passing_year}</td>
-							</tr>
-							<tr>
-								<td>Course</td>
-								<td style="text-transform: uppercase">${program}</td>
-							</tr>
-							<tr>
-								<td>Working at</td>
-								<td>${organisation}, ${location}</td>
-							</tr>
-							<tr>
-								<td>Position</td>
-								<td>${designation}</td>
-							</tr>
-						</table>
-					</head>
-					<body></body>
-				</html>
-				
-				`,
-			};
-
-			let options = null;
-
-			if (role === "student") {
-				options = studentOptions;
-			} else if (role === "faculty") {
-				options = facultyOptions;
-			} else {
-				options = alumniOptions;
-			}
-			receiveMail(options, function (err, data) {
-				if (err) {
-					// res.status(500).json({ message: "Internal Error" });
-					console.log("Internal Error!!");
-				} else {
-					// res.status({ message: "Email sent!!!" });
-					console.log("Email Sent!!");
-				}
-			});
-
-			res.json(savedRequest);
-			// const payload = {
-			// 	user: {
-			// 		id: user.id,
-			// 	},
-			// };
-
-			// // sign the payload with private key
-			// jwt.sign(payload, config.get("privateKey"), { expiresIn: 360000 },(err, token) => {
-			// 		if (err) throw err;
-			// 		//Return Jsonwebtoken
-			// 		res.json({ token });
-			// 	}
-			// );
+			// Send a response after user creation
+			res.json(user);
 		} catch (err) {
 			console.log(err);
 			res.status(500).send("Server error in registering user");
 		}
 	}
 );
+
 
 // @route    GET api/users/me
 // @desc     get current user
@@ -417,22 +131,52 @@ router.get("/me",  async (req, res) => {
 // @access   Private
 
 router.get("/search/:query", async (req, res) => {
+	// try {
+	// 	const searchTerm = req.params.query;
+	// 	console.log("inside search users with term: " + searchTerm);
+	// 	// if(searchTerm == "all"){
+	// 	// 	res.json(users);
+	// 	// }
+	// 	const users = await User.find(
+	// 		{ $text: { $search: searchTerm } },
+	// 		{ score: { $meta: "textScore" } }
+	// 	).sort({ score: { $meta: "textScore" } });
+
+	// 	if (users && users.length > 0) {
+	// 		console.log("NON zero search USERS: " + users.length);
+	// 		res.json(users);
+	// 	} else {
+	// 		res.status(404).json({ msg: "No users found for this search" });
+	// 	}
+	// } catch (err) {
+	// 	res.status(500).json({ msg: "Server Error in searching Users" });
+	// }
+
+
 	try {
 		const searchTerm = req.params.query;
-		console.log("inside search users with term: " + searchTerm);
-		const users = await User.find(
-			{ $text: { $search: searchTerm } },
-			{ score: { $meta: "textScore" } }
-		).sort({ score: { $meta: "textScore" } });
-
-		if (users && users.length > 0) {
-			console.log("NON zero search USERS: " + users.length);
-			res.json(users);
+		console.log(searchTerm);
+		var users = [];
+		if (searchTerm === "all") {
+			users = await User.find();
+			console.log("inside get all user api");
+			if (users) {
+				console.log("NON ZERO USERS" + users.length);
+			}
 		} else {
-			res.status(404).json({ msg: "No users found for this search" });
+			console.log("inside search users");
+			users = await User.find(
+				{ $text: { $search: searchTerm } },
+				{ score: { $meta: "textScore" } }
+			).sort({ score: { $meta: "textScore" } });
+			if (users) {
+				console.log("NON zero search USERS" + users.length);
+			}
 		}
+		res.json(users);
 	} catch (err) {
-		res.status(500).json({ msg: "Server Error in searching Users" });
+		// console.error(err.message);
+		res.status(500).json({ msg: "Server Error in getting all Users" });
 	}
 });
 

@@ -4,7 +4,7 @@ const auth = require("../../middleware/auth");
 const aes256 = require("aes256");
 //add
 
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
 	try {
 		const secret_msg = aes256.encrypt(
 			process.env.ENCRYPTION_KEY,
@@ -32,7 +32,7 @@ router.post("/", auth, async (req, res) => {
 
 //get
 
-router.get("/:conversationId", auth, async (req, res) => {
+router.get("/:conversationId", async (req, res) => {
 	try {
 		console.log("ïnside get mesages by conversation ID");
 		const messages = await Message.find({
