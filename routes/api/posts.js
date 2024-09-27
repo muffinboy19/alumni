@@ -441,139 +441,167 @@ router.post("/:id/likes", async (req, res) => {
 // @desc     toggle DisLike of a post
 // @access   Private
 
-router.post("/:id/dislikes", async (req, res) => {
-	try {
-		const post = await Post.findById(req.params.id);
-		if (post === null) {
-			return res.status(404).json({ msg: "Post Not found" });
-		}
-		if (post.user.toString() === req.user.id) {
-			return res
-				.status(400)
-				.json({ msg: "You can't dislike your own post" });
-		}
+	router.post("/:id/dislikes", async (req, res) => {
+		try {
+			const post = await Post.findById(req.params.id);
+			if (post === null) {
+				return res.status(404).json({ msg: "Post Not found" });
+			}
+			if (post.user.toString() === req.user.id) {
+				return res
+					.status(400)
+					.json({ msg: "You can't dislike your own post" });
+			}
 
-		const disliked = await Post.find({
-			_id: req.params.id, //  match post id
-			dislikes: {
-				$elemMatch: { user: mongoose.Types.ObjectId(req.user.id) },
-			},
-		});
+			const disliked = await Post.find({
+				_id: req.params.id, //  match post id
+				dislikes: {
+					$elemMatch: { user: mongoose.Types.ObjectId(req.user.id) },
+				},
+			});
 
-		if (disliked.length) {
-			return res.status(400).json({ msg: "Post already disliked" });
-		} else {
-			// remove from likes
-			await Post.findOneAndUpdate(
-				{ _id: req.params.id },
-				{
-					$pull: {
-						likes: {
-							user: mongoose.Types.ObjectId(req.user.id),
+			if (disliked.length) {
+				return res.status(400).json({ msg: "Post already disliked" });
+			} else {
+				// remove from likes
+				await Post.findOneAndUpdate(
+					{ _id: req.params.id },
+					{
+						$pull: {
+							likes: {
+								user: mongoose.Types.ObjectId(req.user.id),
+							},
 						},
-					},
-				}
-			);
-			// add to dislikes
-			await Post.updateOne(
-				{ _id: req.params.id },
-				{
-					$push: {
-						dislikes: {
-							user: mongoose.Types.ObjectId(req.user.id),
+					}
+				);
+				// add to dislikes
+				await Post.updateOne(
+					{ _id: req.params.id },
+					{
+						$push: {
+							dislikes: {
+								user: mongoose.Types.ObjectId(req.user.id),
+							},
 						},
-					},
-				}
-			);
-			const updatedPost = await Post.findById(req.params.id);
+					}
+				);
+				const updatedPost = await Post.findById(req.params.id);
 
-			const payload = {
-				id: post._id,
-				likes: updatedPost.likes,
-				dislikes: updatedPost.dislikes,
-			};
-			return res.status(200).json(payload);
+				const payload = {
+					id: post._id,
+					likes: updatedPost.likes,
+					dislikes: updatedPost.dislikes,
+				};
+				return res.status(200).json(payload);
+			}
+		} catch (error) {
+			console.error(error.message);
+			res.status(500).send("Server Error");
 		}
-	} catch (error) {
-		console.error(error.message);
-		res.status(500).send("Server Error");
-	}
-});
+	});
 
 // @route    POST api/posts/:id/comments
 // @desc     comment on post
 // @access   Private
-router.post(
-	"/:id/comments",
-	[[check("text", "Comment cannot be Empty").not().isEmpty()]],
-	async (req, res) => {
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			console.log("validation check");
+router.post("/:id/dislikes", async (req, res) => {
+    try {
+        // Extract userId from the request body
+        const { userId } = req.body;
 
-			return res.status(400).json({ errors: errors.array() });
-		}
+        if (!userId) {
+            return res.status(400).json({ msg: "User ID is required" });
+        }
 
-		const filter = new Filter();
+        const post = await Post.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ msg: "Post Not found" });
+        }
 
-		var containsBadWords = filter.isProfane(req.body.text);
+        // Prevent user from disliking their own post
+        if (post.user.toString() === userId) {
+            return res.status(400).json({ msg: "You can't dislike your own post" });
+        }
 
-		if (containsBadWords) {
-			console.log();
-			return res
-				.status(400)
-				.json({ errors: [{ msg: "Bad word detected" }] });
-		}
+        // Check if the user has already disliked the post
+        if (post.dislikes.some((dislike) => dislike.user.toString() === userId)) {
+            return res.status(400).json({ msg: "Post already disliked" });
+        }
 
-		try {
-			const user = await User.findById(req.user.id).select("-password");
-			const post = await Post.findById(req.params.id);
+        // Remove the user from likes if present
+        await Post.findByIdAndUpdate(req.params.id, {
+            $pull: { likes: { user: userId } },
+        });
 
-			const newComment = {
-				text: req.body.text,
-				name: user.name,
-				avatar: user.avatar,
-				user: req.user.id,
-			};
+        // Add the user to dislikes
+        await Post.findByIdAndUpdate(req.params.id, {
+            $push: { dislikes: { user: userId } },
+        });
 
-			post.comments.unshift(newComment);
+        const updatedPost = await Post.findById(req.params.id);
 
-			await post.save();
-			console.log("comment added to db");
-			res.json(post.comments);
-		} catch (error) {
-			console.log("err block routes");
-			console.error(error.message);
-			res.status(500).send("server error");
-		}
-	}
-);
+        return res.status(200).json({
+            id: updatedPost._id,
+            likes: updatedPost.likes,
+            dislikes: updatedPost.dislikes,
+        });
+    } catch (error) {
+        console.error(error.stack || error.message);
+        res.status(500).send("Server Error");
+    }
+});
+
 
 // @route    DELETE api/posts/:id/comments/:comment_id
 // @desc     delete comment
 // @access   Private
-router.delete("/:id/comments/:comment_id", async (req, res) => {
-	try {
-		const post = await Post.findById(req.params.id);
-		const comment = post.comments.find(
-			(comment) => comment.id === req.params.comment_id
-		);
+router.post(
+    "/:id/comments",
+    [[check("text", "Comment cannot be Empty").not().isEmpty()]],
+    async (req, res) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-		if (!comment) {
-			return res.status(400).json({ msg: "comment does not exist" });
-		}
+        const filter = new Filter();
+        const containsBadWords = filter.isProfane(req.body.text);
 
-		if (comment.user.toString() !== req.user.id) {
-			return res.status(401).json({ msg: "User not authorised" });
-		}
-		post.comments = post.comments.filter((comm) => comm.id !== comment.id);
-		await post.save();
-		res.json(post.comments);
-	} catch (error) {
-		console.error(error.message);
-		res.status(500).send("server error");
-	}
-});
+        if (containsBadWords) {
+            return res.status(400).json({ errors: [{ msg: "Bad word detected" }] });
+        }
+
+        try {
+            // Get userId from the request body
+            const { userId } = req.body;
+
+            if (!userId) {
+                return res.status(400).json({ msg: "User ID is required" });
+            }
+
+            const user = await User.findById(userId).select("-password");
+            const post = await Post.findById(req.params.id);
+
+            if (!user || !post) {
+                return res.status(404).json({ msg: "User or Post not found" });
+            }
+
+            const newComment = {
+                text: req.body.text,
+                name: user.name,
+                avatar: user.avatar,
+                user: userId,
+            };
+
+            post.comments.unshift(newComment);
+            await post.save();
+
+            res.json(post.comments);
+        } catch (error) {
+            console.error(error.stack || error.message);
+            res.status(500).send("Server Error");
+        }
+    }
+);
 
 // router.get("/search/:query_string", auth, async (req, res) => {
 // 	try {
