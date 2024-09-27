@@ -149,25 +149,25 @@ const InitialTransition = () => {
 
 const App = () => {
 	const loc = useLocation();
-	const [isFirstMount, setIsFirstMount] = useState(true);
-	const hasLoadedFirstPage = useRef(false); // Track if the first load happened
+	// const [isFirstMount, setIsFirstMount] = useState(true);
+	// const hasLoadedFirstPage = useRef(false); // Track if the first load happened
 
-	useEffect(() => {
-		if (hasLoadedFirstPage.current) {
-			// This will run for any subsequent route change
-			setIsFirstMount(false);
-		} else {
-			// This runs only on the first page load
-			hasLoadedFirstPage.current = true;
-		}
-	}, [loc.pathname, hasLoadedFirstPage, setIsFirstMount]); // Trigger on route change
+	// useEffect(() => {
+	// 	if (hasLoadedFirstPage.current) {
+	// 		// This will run for any subsequent route change
+	// 		setIsFirstMount(false);
+	// 	} else {
+	// 		// This runs only on the first page load
+	// 		hasLoadedFirstPage.current = true;
+	// 	}
+	// }, [loc.pathname, hasLoadedFirstPage, setIsFirstMount]); // Trigger on route change
 	// detecting first route change
 
 	return (
 		<AnimatePresence mode="wait">
 			<React.Fragment>
 				<Navbar />
-				{isFirstMount && <InitialTransition />}
+				<InitialTransition />
 				<Switch location={loc} key={loc.pathname}>
 					<Route exact path="/">
 						<motion.div>
