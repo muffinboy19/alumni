@@ -46,7 +46,7 @@ const Login = ({ login, isAuthenticated, closeSideNav }) => {
 	};
 
 	if (isAuthenticated) {
-		return <Redirect to="/feed/topic/IAS?search=" />;
+		return <Redirect to="/feed/topic/Mentorship?search=" />;
 	}
 
 	const togglePassword = () => {

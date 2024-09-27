@@ -68,7 +68,7 @@ const Posts = ({
 					<h1 className="large text-primary">Posts</h1>
 					<p className="lead">
 						<i className="fas fa-user mr-4" />
-						Welcome to the community
+						Welcome to the IIITA Community
 					</p>
 				</div>
 				<div className="row">
@@ -77,8 +77,10 @@ const Posts = ({
 							style={{
 								color: "blue",
 								paddingLeft: "2rem",
-								textAlign: "left",
+								textAlign: "center",
 								borderBottom: "1px solid lightgrey",
+								fontSize: "2rem",
+								fontWeight: "bold",
 							}}
 						>
 							<strong>Channels</strong>
