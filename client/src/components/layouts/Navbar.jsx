@@ -150,10 +150,10 @@ const Navbar = ({
 			<li>
 				<Link to="/userprofile" className="navbar-link">
 					<i className="fas fa-user"></i>{" "}
-					{/* <span className="hide-sm">Profile</span> */}
-					{authUser !== null && (
+					<span className="hide-sm">Profile</span>
+					{/* {authUser !== null && (
 						<span className="user-role-tag">{authUser.role}</span>
-					)}
+					)} */}
 				</Link>
 			</li>
 
