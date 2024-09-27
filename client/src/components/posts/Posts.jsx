@@ -185,7 +185,7 @@ const Posts = ({
 							{posts !== null && posts.length === 0 && (
 								<h3 style={{ textAlign: "center" }}>No Posts to Display</h3>
 							)}
-							console.log("user is ", authUser)
+							{console.log("user is ", authUser)}
 							{posts !== null &&
 								posts.map((pst) => {
 									console.log(pst);
