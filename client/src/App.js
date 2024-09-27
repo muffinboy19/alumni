@@ -167,7 +167,7 @@ const App = () => {
 		<AnimatePresence mode="wait">
 			<React.Fragment>
 				<Navbar />
-				{isFirstMount.current && <InitialTransition />}
+				{isFirstMount && <InitialTransition />}
 				<Switch location={loc} key={loc.pathname}>
 					<Route exact path="/">
 						<motion.div>
