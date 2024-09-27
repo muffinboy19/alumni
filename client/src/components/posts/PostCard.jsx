@@ -18,6 +18,7 @@ const PostCard = ({
 		user,
 		image,
 		name,
+		avatar,
 	},
 	auth: { loadingAuth, authUser },
 	toggleLike,
@@ -35,7 +36,7 @@ const PostCard = ({
 						<img
 							className="rounded-circle"
 							alt="avatar"
-							src={"https://iiita.irins.org/assets/profile_images/102951.jpg"}
+							src={avatar}
 							width="45"
 						/>
 						<h6>{name}</h6>
