@@ -160,14 +160,14 @@ const App = () => {
 			// This runs only on the first page load
 			hasLoadedFirstPage.current = true;
 		}
-	}, [loc.pathname]); // Trigger on route change
+	}, [loc.pathname, hasLoadedFirstPage, setIsFirstMount]); // Trigger on route change
 	// detecting first route change
 
 	return (
 		<AnimatePresence mode="wait">
 			<React.Fragment>
-				{isFirstMount.current && <InitialTransition />}
 				<Navbar />
+				{isFirstMount.current && <InitialTransition />}
 				<Switch location={loc} key={loc.pathname}>
 					<Route exact path="/">
 						<motion.div>
