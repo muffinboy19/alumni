@@ -7,8 +7,7 @@ import PostCard from "./PostCard";
 import { Link } from "react-router-dom";
 import { closeSideNav } from "../../actions/alert";
 import { useLocation } from "react-router-dom";
-import { getAllChannels,createChannel } from "../../actions/channel";
-
+import { getAllChannels, createChannel } from "../../actions/channel";
 
 function useQuery() {
 	return new URLSearchParams(useLocation().search);
@@ -38,7 +37,6 @@ const Posts = ({
 		}
 		getMyData();
 	}, [match.params.channel_name]);
-
 
 	const handleCreateChannel = () => {
 		// Check if the input is not empty before creating the channel
@@ -85,28 +83,29 @@ const Posts = ({
 						>
 							<strong>Channels</strong>
 						</li>
-						{channels !== null && channels.map((c) => {
-							return (
-								<li
-									key={c._id}
-									className={
-										match.params.channel_name === c.name
-											? "selected-tab admin-side-panel-subitem"
-											: "admin-side-panel-subitem"
-									}
-								>
-									<Link
-										to={`/feed/topic/${c.name}?search=${search}`}
-										className="side-nav-channel-link"
+						{channels !== null &&
+							channels.map((c) => {
+								return (
+									<li
+										key={c._id}
+										className={
+											match.params.channel_name === c.name
+												? "selected-tab admin-side-panel-subitem"
+												: "admin-side-panel-subitem"
+										}
 									>
-										<span>{c.name}</span>
-									</Link>
-								</li>
-							);
-						})}
+										<Link
+											to={`/feed/topic/${c.name}?search=${search}`}
+											className="side-nav-channel-link"
+										>
+											<span>{c.name}</span>
+										</Link>
+									</li>
+								);
+							})}
 
-				{/* Only render the input and button if the user is Alumni or Admin */}
-				{authUser && (authUser.role === "alumni" || authUser.isAdmin) && (
+						{/* Only render the input and button if the user is Alumni or Admin */}
+						{authUser && (authUser.role === "alumni" || authUser.isAdmin) && (
 							<div
 								style={{
 									marginTop: "1.5rem",
@@ -145,15 +144,12 @@ const Posts = ({
 									onMouseOver={(e) =>
 										(e.target.style.backgroundColor = "darkblue")
 									}
-									onMouseOut={(e) =>
-										(e.target.style.backgroundColor = "blue")
-									}
+									onMouseOut={(e) => (e.target.style.backgroundColor = "blue")}
 								>
 									<strong>Add Channel</strong>
 								</button>
 							</div>
 						)}
-
 					</ul>
 					<div className="content col-md-9">
 						<div className="search-div">
@@ -162,10 +158,7 @@ const Posts = ({
 								className="btn btn-light col-3 posts-top-item"
 								style={{ width: "100%" }}
 							>
-								<i
-									className="fas fa-edit"
-									style={{ marginRight: "0.5em" }}
-								></i>
+								<i className="fas fa-edit" style={{ marginRight: "0.5em" }}></i>
 								Create Post
 							</Link>
 							<form method="get" className="col-9 search-form">
@@ -188,31 +181,22 @@ const Posts = ({
 						</div>
 
 						<div className="posts-list">
-							{
-							console.log("posts = ",posts) }
-							{
-							posts !== null && posts.length === 0 && (
-								<h3 style={{ textAlign: "center" }}>
-									No Posts to Display
-								</h3>
+							{console.log("posts = ", posts)}
+							{posts !== null && posts.length === 0 && (
+								<h3 style={{ textAlign: "center" }}>No Posts to Display</h3>
 							)}
 							{posts !== null &&
 								posts.map((pst) => {
 									console.log(pst);
 									if (
 										authUser !== null &&
-										(pst.visibility.includes(
-											authUser.role
-										) ||
+										(pst.visibility.includes(authUser.role) ||
 											pst.user === authUser._id ||
 											authUser.isAdmin)
 									) {
-										return (
-											<PostCard
-												key={pst._id}
-												post={pst}
-											/>
-										);
+										return <PostCard key={pst._id} post={pst} />;
+									} else {
+										return <h1>Not visible to you</h1>;
 									}
 								})}
 						</div>
