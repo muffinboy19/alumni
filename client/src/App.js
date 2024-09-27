@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
 
 import logo from "./019eddbf5bf91320da288c242aefa491.png";
@@ -148,23 +148,25 @@ const InitialTransition = () => {
 };
 
 const App = () => {
-	const isFirstRender = useRef(true);
 	const loc = useLocation();
+	const [isFirstMount, setIsFirstMount] = useState(true);
+	const hasLoadedFirstPage = useRef(false); // Track if the first load happened
+
 	useEffect(() => {
-		store.dispatch(loadUser());
-	}, []);
-	// detecting first route change
-	useEffect(() => {
-		if (isFirstRender.current) {
-			// It's the first render
-			isFirstRender.current = false; // After first render, set it to false
+		if (hasLoadedFirstPage.current) {
+			// This will run for any subsequent route change
+			setIsFirstMount(false);
+		} else {
+			// This runs only on the first page load
+			hasLoadedFirstPage.current = true;
 		}
-	}, []);
+	}, [loc.pathname]); // Trigger on route change
+	// detecting first route change
 
 	return (
 		<AnimatePresence mode="wait">
 			<React.Fragment>
-				{isFirstRender.current && <InitialTransition />}
+				{isFirstMount.current && <InitialTransition />}
 				<Navbar />
 				<Switch location={loc} key={loc.pathname}>
 					<Route exact path="/">
