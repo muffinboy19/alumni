@@ -57,10 +57,9 @@ router.post(
 		}
 
 		try {
-			console.log("this is the user id ", req.user.id);
-			const user = await User.findById(req.user.id).select("-password");
 			console.log(req.body);
 			const {
+				id,
 				text,
 				heading,
 				visibleStudent,
@@ -69,9 +68,10 @@ router.post(
 				channel,
 				images,
 			} = req.body;
-
+			
+			console.log("this is the user id ", id);
+			const user = await User.findById(id).select("-password");
 			visible = [];
-
 			if (visibleStudent) {
 				visible.push("student");
 			}
@@ -89,15 +89,85 @@ router.post(
 				text: text,
 				name: user.name,
 				avatar: user.avatar,
-				user: req.user.id,
+				user: id,
 				visibility: visible,
 				images: images,
 				channel: channel,
 			});
 
 			const post = await post_request.save();
-			console.log("Post Request sent");
-			res.json(post);
+			console.log(post);
+
+
+		async function pratham(){
+			const request = await PostRequest.findById(post._id);
+			console.log("Join request found:", request);
+			
+			if (!request) {
+				console.log("Join request not found");
+				return res.status(404).send("Join request not found");
+			}
+	
+			const { heading, text, avatar, user, date, name, visibility, channel, images } =
+				request;
+
+		const result_channel = await Channel.find({ name: channel });
+
+		if (!result_channel) {
+			return res
+				.status(400)
+				.json({ errors: [{ msg: "Channel does not exists" }] });
+		}
+
+		const newpost = new Post({
+			user,
+			heading,
+			text,
+			avatar,
+			date,
+			name,
+			visibility,
+			channel,
+			images
+		});
+
+		const saved_post = await newpost.save();
+		console.log(saved_post);
+		const post_id = saved_post._id;
+
+		await Channel.findOneAndUpdate(
+			{ name: channel },
+			{
+				$push: { posts: post_id },
+			}
+		);
+
+		await PostRequest.findOneAndDelete(req.params.id);
+
+		const postuser = await User.findById(user).select("-password");
+
+		const options = {
+			subject: "Post Acceepted",
+			text: "Congratulations! Your post has been approved. You can now view this post.",
+			to: postuser.email,
+			from: {
+				name: "Alumni Connect",
+				address: process.env.EMAIL,
+			},
+		};
+
+		return res.json({ id: req.params.id });
+
+
+
+
+
+
+	}
+	await pratham();
+
+	console.log("Post Request sent");
+
 		} catch (error) {
 			console.error(error.message);
 			res.status(500).send("server error in creating post request");

@@ -42,6 +42,7 @@ router.post(
 		//Check if the user exist
 		try {
 			let user = await User.findOne({ email });
+			console.log(user);	
 			if (!user) {
 				return res
 					.status(400)
@@ -50,7 +51,7 @@ router.post(
 
 			if (user.blocked) {
 				return res
-					.status(400)
+					.status(400)	
 					.json({ errors: [{ msg: "Account Blocked" }] });
 			}
 
