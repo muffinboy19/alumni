@@ -35,7 +35,7 @@ const PostCard = ({
 						<img
 							className="rounded-circle"
 							alt="avatar"
-							src={image}
+							src={"https://iiita.irins.org/assets/profile_images/102951.jpg"}
 							width="45"
 						/>
 						<h6>{name}</h6>
@@ -80,33 +80,23 @@ const PostCard = ({
 							<span>{dislikes.length}</span>
 						</button>
 						<button className="btn post-action">
-						<Link to={`/posts/${_id}`}>
-							<i
-								className="far fa-comments post-icons"
-								aria-hidden="true"
-							/>
-							{/* <div className="post-action-count">
+							<Link to={`/posts/${_id}`}>
+								<i className="far fa-comments post-icons" aria-hidden="true" />
+								{/* <div className="post-action-count">
 								<span>{comments.length}</span>
 							</div> */}
-						</Link>
-							
+							</Link>
 						</button>
 						{!loadingAuth && authUser._id === user && (
 							<button
 								className="btn post-action"
 								onClick={(e) => deletePost(_id)}
 							>
-								<i
-									className="fa fa-trash post-icons"
-									aria-hidden="true"
-								/>
+								<i className="fa fa-trash post-icons" aria-hidden="true" />
 							</button>
 						)}
 						<p className="post-date post-action">
-							<i
-								className="far fa-calendar post-icons"
-								aria-hidden="true"
-							/>
+							<i className="far fa-calendar post-icons" aria-hidden="true" />
 							<Moment fromNow>{date}</Moment>
 						</p>
 					</div>
