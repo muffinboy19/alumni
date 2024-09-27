@@ -337,36 +337,15 @@ ul {
 	text-align: center;
 }
 
-/* .hero-inner > .hero-head {
-  animation-name: landing;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-fill-mode: both;
-}
-.hero-inner > .hero-text {
-  animation-name: landing;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-out;
-  animation-delay: 500ms;
-  animation-fill-mode: both;
-}
-.hero-inner > .auth-buttons {
-  animation-name: landing;
-  animation-duration: 0.5s;
-  animation-timing-function: ease-out;
-  animation-delay: 800ms;
-  animation-fill-mode: both;
-} */
 .hero-head {
 	width: fit-content;
 	margin-top: 20px;
-	font-size: 8rem;
+	font-size: 5.8rem;
 	font-weight: 700;
-	letter-spacing: normal;
+	letter-spacing: -3px;
 }
 .hero-text {
-	font-size: 3.6rem;
+	font-size: 2.4rem;
 	line-height: 0.9;
 	font-weight: 500;
 	letter-spacing: normal;
