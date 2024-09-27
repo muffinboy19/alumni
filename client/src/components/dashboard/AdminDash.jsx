@@ -10,7 +10,6 @@ import Settings from "../layouts/Settings";
 import DisplayAchievments from "./DisplayAchievements";
 import DisplayFeedbacks from "./DisplayFeedbacks";
 
-
 import { getAchievements, getFeedbacks } from "../../actions/extras";
 
 const AdminDash = ({
@@ -75,17 +74,17 @@ const AdminDash = ({
 			switch (filter) {
 				case "student":
 					setStudentJoin(filteredRequests);
-					break
+					break;
 				case "alumni":
 					setAlumniJoin(filteredRequests);
-					break
+					break;
 				case "professor":
 					setProfessorJoin(filteredRequests);
-					break
+					break;
 				default:
-					setStudentJoin([])
-					setAlumniJoin([])
-					setProfessorJoin([])
+					setStudentJoin([]);
+					setAlumniJoin([]);
+					setProfessorJoin([]);
 			}
 		}
 	};
@@ -99,17 +98,17 @@ const AdminDash = ({
 			switch (filter) {
 				case "student":
 					setStudentPost(filteredRequests);
-					break
+					break;
 				case "alumni":
 					setAlumniPost(filteredRequests);
-					break
+					break;
 				case "professor":
 					setProfessorPost(filteredRequests);
-					break
+					break;
 				default:
-					setStudentPost([])
-					setAlumniPost([])
-					setProfessorPost([])
+					setStudentPost([]);
+					setAlumniPost([]);
+					setProfessorPost([]);
 			}
 		}
 	};
@@ -135,7 +134,7 @@ const AdminDash = ({
 					className="fixed inset-y-0 left-0 z-30 w-64 overflow-y-auto transition duration-300 ease-out transform translate-x-0
 				border-r-2 lg:translate-x-0 lg:static lg:inset-0 ease-out translate-x-0 col-3 admin-side-nav float-child"
 				>
-					<ul>
+					{/* <ul>
 						<li
 							className={
 								joinTabOpen || showAllJoin
@@ -185,8 +184,8 @@ const AdminDash = ({
 								</li>
 							</React.Fragment>
 						)}
-					</ul>
-					<ul>
+					</ul> */}
+					{/* <ul>
 						<li
 							className={
 								postTabOpen || showAllPost
@@ -236,13 +235,11 @@ const AdminDash = ({
 								</li>
 							</React.Fragment>
 						)}
-					</ul>
-					<ul>
+					</ul> */}
+					{/* <ul>
 						<li
 							className={
-								showAchievements
-									? "selected-tab"
-									: "admin-side-panel-subitem"
+								showAchievements ? "selected-tab" : "admin-side-panel-subitem"
 							}
 							onClick={() => {
 								closeAllTabs();
@@ -252,13 +249,11 @@ const AdminDash = ({
 							<Icon name="book" />
 							Achievemnets
 						</li>
-					</ul>
+					</ul> */}
 					<ul>
 						<li
 							className={
-								showFeedbacks
-									? "selected-tab"
-									: "admin-side-panel-subitem"
+								showFeedbacks ? "selected-tab" : "admin-side-panel-subitem"
 							}
 							onClick={() => {
 								closeAllTabs();
@@ -273,9 +268,7 @@ const AdminDash = ({
 						<ul>
 							<li
 								className={
-									showSettings
-										? "selected-tab"
-										: "admin-side-panel-subitem"
+									showSettings ? "selected-tab" : "admin-side-panel-subitem"
 								}
 								onClick={() => {
 									closeAllTabs();
@@ -294,21 +287,16 @@ const AdminDash = ({
 							<Spinner />
 						) : (
 							<React.Fragment>
-								{joinRequests !== null &&
-									joinRequests.length === 0 && (
-										<div className="no-data-page">
-											No Join Requests Found
-										</div>
-									)}
-								<div className="request-list-admin-dash float-child" style={{height: "800px"}}>
+								{joinRequests !== null && joinRequests.length === 0 && (
+									<div className="no-data-page">No Join Requests Found</div>
+								)}
+								<div
+									className="request-list-admin-dash float-child"
+									style={{ height: "800px" }}
+								>
 									{joinRequests !== null &&
 										joinRequests.map((item) => {
-											return (
-												<JoinRequestCard
-													key={item._id}
-													request={item}
-												/>
-											);
+											return <JoinRequestCard key={item._id} request={item} />;
 										})}
 								</div>
 							</React.Fragment>
@@ -326,12 +314,7 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{studentJoin.map((item) => {
-									return (
-										<JoinRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <JoinRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
@@ -346,12 +329,7 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{professorJoin.map((item) => {
-									return (
-										<JoinRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <JoinRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
@@ -366,12 +344,7 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{alumniJoin.map((item) => {
-									return (
-										<JoinRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <JoinRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
@@ -383,18 +356,13 @@ const AdminDash = ({
 						) : (
 							<React.Fragment>
 								{postRequests.length === 0 && (
-									<div className="no-data-page" style={{textAlign:"center"}}>
+									<div className="no-data-page" style={{ textAlign: "center" }}>
 										No Post Requests found
 									</div>
 								)}
 								<div className="request-list-admin-dash float-child">
 									{postRequests.map((item) => {
-										return (
-											<PostRequestCard
-												key={item._id}
-												request={item}
-											/>
-										);
+										return <PostRequestCard key={item._id} request={item} />;
 									})}
 								</div>
 							</React.Fragment>
@@ -412,12 +380,7 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{studentPost.map((item) => {
-									return (
-										<PostRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <PostRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
@@ -432,12 +395,7 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{professorPost.map((item) => {
-									return (
-										<PostRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <PostRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
@@ -452,25 +410,16 @@ const AdminDash = ({
 							)}
 							<div className="request-list-admin-dash float-child">
 								{alumniPost.map((item) => {
-									return (
-										<PostRequestCard
-											key={item._id}
-											request={item}
-										/>
-									);
+									return <PostRequestCard key={item._id} request={item} />;
 								})}
 							</div>
 						</React.Fragment>
 					)}
 
 					{showAchievements && (
-						<DisplayAchievments
-							achievements={extras.achievements}
-						/>
+						<DisplayAchievments achievements={extras.achievements} />
 					)}
-					{showFeedbacks && (
-						<DisplayFeedbacks feedbacks={extras.feedbacks} />
-					)}
+					{showFeedbacks && <DisplayFeedbacks feedbacks={extras.feedbacks} />}
 					{showSettings && <Settings />}
 				</div>
 			</div>
