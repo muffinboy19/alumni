@@ -39,7 +39,7 @@ const PostCard = ({
 							src={avatar}
 							width="45"
 							style={{
-								width: "150px",
+								width: "120px",
 								aspectRatio: "1/1",
 							}}
 						/>
