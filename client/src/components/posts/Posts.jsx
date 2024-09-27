@@ -76,7 +76,7 @@ const Posts = ({
 						<li
 							style={{
 								color: "blue",
-								paddingLeft: "2rem",
+								padding: "0rem 2rem",
 								textAlign: "center",
 								borderBottom: "1px solid lightgrey",
 								fontSize: "2rem",
