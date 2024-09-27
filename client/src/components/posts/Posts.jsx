@@ -189,8 +189,9 @@ const Posts = ({
 							{posts !== null &&
 								posts.map((pst) => {
 									console.log(pst);
-									{
-										/* if (
+									return <PostCard key={pst._id} post={pst} />;
+								})}
+							{/* if (
 										authUser !== null &&
 										(pst.visibility.includes(authUser.role) ||
 											pst.user === authUser._id ||
@@ -198,10 +199,7 @@ const Posts = ({
 									) {
 									} else {
 										return <h1>Not visible to you</h1>;
-									} */
-									}
-									return <PostCard key={pst._id} post={pst} />;
-								})}
+									} */}
 						</div>
 					</div>
 				</div>
