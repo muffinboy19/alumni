@@ -246,9 +246,9 @@ const Notifications = () => {
 					"/api/notifications/getNotifications",
 					tosend
 				);
+				console.log("notifications - ", data);
 
 				if (data && data.data && data.data.data) {
-					console.log(data);
 					const notifications = data.data.data.reverse();
 					setNotifications(notifications);
 					setNotiID(data.data.ID.id);
@@ -256,7 +256,7 @@ const Notifications = () => {
 					setTotalNotifications(notifications.length); // Set the total notifications length
 				}
 			} catch (error) {
-				console.error("Error fetching notifications", error);
+				console.error("Error fetching notifications  ", error);
 			}
 		};
 

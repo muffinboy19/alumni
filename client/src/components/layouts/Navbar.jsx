@@ -194,13 +194,13 @@ const Navbar = ({
 
 	const guestLinks = (
 		<Fragment>
-			<li>
+			{/* <li>
 				<Link to="/add-achievement" className="navbar-link hero-nav-links">
 					<span className="hide-sm nav-lt" style={navLinkColor}>
 						Achievements
 					</span>
 				</Link>
-			</li>
+			</li> */}
 			<li>
 				<Link to="/About" className="navbar-link hero-nav-links">
 					<span className="hide-sm nav-lt" style={navLinkColor}>

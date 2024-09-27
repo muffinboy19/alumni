@@ -49,7 +49,7 @@ const About = () => {
 					alignItems: "center",
 					minHeight: "100vh",
 					padding: "1rem 1rem",
-					marginTop: "-2rem",
+					// marginTop: "-2rem",
 					textAlign: "center",
 				}}
 			>
