@@ -38,6 +38,10 @@ const PostCard = ({
 							alt="avatar"
 							src={avatar}
 							width="45"
+							style={{
+								width: "150px",
+								aspectRatio: "1/1",
+							}}
 						/>
 						<h6>{name}</h6>
 					</Link>
