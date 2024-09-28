@@ -388,10 +388,11 @@ router.delete("/:id", async (req, res) => {
 router.post("/:id/likes", async (req, res) => {
     try {
         console.log("Received request to like post:", req.params.id);
-        console.log("Request body:", req.body);
+        
 
         // Log the user ID from the request body (instead of req.user)
         const { userId } = req.body; // Assuming userId is sent in the request body
+		console.log("Request body:", req.body);
 
         if (!userId) {
             console.log("User ID missing in request body");
