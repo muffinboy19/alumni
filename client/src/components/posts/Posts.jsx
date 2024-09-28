@@ -177,7 +177,7 @@ const Posts = ({
 									type="submit"
 									value="Search"
 									className="btn btn-primary col-3 posts-top-item"
-									onClick={searchPosts}
+									// onClick={searchPosts}
 								/>
 							</form>
 						</div>

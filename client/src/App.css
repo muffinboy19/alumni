@@ -45,6 +45,8 @@ body {
 
 .my-container {
 	max-width: 1500px;
+	display: flex;
+	justify-content: center;
 }
 
 /* general properties */
