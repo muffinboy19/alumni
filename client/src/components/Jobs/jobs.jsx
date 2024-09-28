@@ -85,11 +85,16 @@ const Job = () => {
 							display: "flex",
 							justifyContent: "center",
 							backgroundColor: "#f8f9fa",
-							borderColor: "#f8f9fa",
-							border: "1px solid black",
 						}}
 					>
-						<Link className="btn my-1" to="/createjob">
+						<Link
+							className="btn my-1"
+							to="/createjob"
+							style={{
+								borderColor: "#f8f9fa",
+								border: "2px solid black",
+							}}
+						>
 							Create Jobs
 						</Link>
 					</div>

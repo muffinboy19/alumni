@@ -43,7 +43,7 @@ const PostDisplay = ({
 								style={{
 									borderRadius: "50% 50%",
 									marginRight: "1em",
-									width: "50px",
+									width: "25px",
 									aspectRatio: "1/1",
 								}}
 								onClick={() => history.goBack()}
