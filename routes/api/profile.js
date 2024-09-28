@@ -12,7 +12,7 @@ const Post = require("../../models/Post");
 // @route    GET api/profile/me
 // @desc     get current user's profile
 // @access   Private
-router.get("/me", auth, async (req, res) => {
+router.get("/me", async (req, res) => {
 	try {
 		const user = await User.findOne({ user: req.user.id }).select(
 			"-password"
@@ -174,7 +174,7 @@ router.get("/:user_id", async (req, res) => {
 // @desc     delete profile, user, posts
 // @access   Private
 
-router.delete("/", auth, async (req, res) => {
+router.delete("/", async (req, res) => {
 	try {
 		await Post.deleteMany({ user: req.user.id });
 		await User.findOneAndRemove({ _id: req.user.id });
@@ -235,7 +235,7 @@ router.put(
 // @desc     delete profile experience
 // @access   Private
 
-router.delete("/experience/:exp_id", auth, async (req, res) => {
+router.delete("/experience/:exp_id", async (req, res) => {
 	try {
 		const user = await User.findById(req.user.id).select("-password");
 		// get index of experience to remove
@@ -300,7 +300,7 @@ router.put(
 // @desc     delete profile experience
 // @access   Private
 
-router.delete("/education/:edu_id", auth, async (req, res) => {
+router.delete("/education/:edu_id", async (req, res) => {
 	try {
 		const user = await User.findById(req.user.id).select("-password");
 		// get index of experience to remove
