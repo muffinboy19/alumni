@@ -387,22 +387,22 @@ router.delete("/:id", async (req, res) => {
 
 router.post("/:id/likes", async (req, res) => {
     try {
-        console.log("Received request to like post:", req.params.id);
+        // console.log("Received request to like post:", req.params.id);
         
 
-        // Log the user ID from the request body (instead of req.user)
+        // // Log the user ID from the request body (instead of req.user)
         const { userId } = req.body; // Assuming userId is sent in the request body
 		console.log("Request body:", req.body);
 
-        if (!userId) {
-            console.log("User ID missing in request body");
-            return res.status(400).json({ msg: "User ID is required" });
-        }
+        // if (!userId) {
+        //     console.log("User ID missing in request body");
+        //     return res.status(400).json({ msg: "User ID is required" });
+        // }
 
-        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-            console.log("Invalid Post ID:", req.params.id);
-            return res.status(400).json({ msg: "Invalid Post ID" });
-        }
+        // if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        //     console.log("Invalid Post ID:", req.params.id);
+        //     return res.status(400).json({ msg: "Invalid Post ID" });
+        // }
 
         const post = await Post.findById(req.params.id);
         if (!post) {
@@ -410,29 +410,29 @@ router.post("/:id/likes", async (req, res) => {
             return res.status(404).json({ msg: "Post Not found" });
         }
 
-        console.log("Found post:", post._id);
+        // console.log("Found post:", post._id);
 
-        // Prevent user from liking their own post
-        if (post.user.toString() === userId) {
-            console.log("User attempted to like their own post:", userId);
-            return res.status(400).json({ msg: "You can't like your own post" });
-        }
+        // // Prevent user from liking their own post
+        // if (post.user.toString() === userId) {
+        //     console.log("User attempted to like their own post:", userId);
+        //     return res.status(400).json({ msg: "You can't like your own post" });
+        // }
 
-        // Check if the user has already liked the post
-        if (post.likes.some((like) => like.user.toString() === userId)) {
-            console.log("User already liked the post:", userId);
-            return res.status(400).json({ msg: "Post already liked" });
-        }
+        // // Check if the user has already liked the post
+        // if (post.likes.some((like) => like.user.toString() === userId)) {
+        //     console.log("User already liked the post:", userId);
+        //     return res.status(400).json({ msg: "Post already liked" });
+        // }
 
-        // Remove from dislikes if present
-        await Post.findByIdAndUpdate(req.params.id, {
-            $pull: { dislikes: { user: userId } },
-        });
-        console.log("Removed user from dislikes if they had disliked it:", userId);
+        // // Remove from dislikes if present
+        // await Post.findByIdAndUpdate(req.params.id, {
+        //     $pull: { dislikes: { user: userId } },
+        // });
+        // console.log("Removed user from dislikes if they had disliked it:", userId);
 
         // Add to likes
         await Post.findByIdAndUpdate(req.params.id, {
-            $push: { likes: { user: userId } },
+            $push: { likes: { user: "b45b4k6jb46bj446bv475k" } },
         });
         console.log("Added user to likes:", userId);
 
