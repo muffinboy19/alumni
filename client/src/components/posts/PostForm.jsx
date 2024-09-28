@@ -71,11 +71,7 @@ const PostForm = ({
 			if (image !== "") {
 				const formData1 = new FormData();
 				formData1.append("file", image);
-				const res1 = await axios.post(
-					"/upload-image",
-					formData1,
-					config
-				);
+				const res1 = await axios.post("/upload-image", formData1, config);
 				images.push(res1.data);
 			}
 			console.log(requireApproval);
@@ -153,7 +149,7 @@ const PostForm = ({
 							onChange={(e) => setImage(e.target.files[0])}
 						/>
 					</div>
-					
+
 					{/* <div className="form-group">
 						<label>Upload images (.png, .jpg, .jpeg)</label>
 						<input
@@ -166,10 +162,7 @@ const PostForm = ({
 					</div> */}
 
 					<div className="form-group select-post-visibility">
-						<p
-							style={{ fontSize: "1.2rem" }}
-							className="secondary-text"
-						>
+						<p style={{ fontSize: "1.2rem" }} className="secondary-text">
 							Who do you want this post to be visible to?
 						</p>
 						<div className="form-group checkbox-inline">
@@ -180,9 +173,7 @@ const PostForm = ({
 								checked={visibleStudent ? true : false}
 								value={visibleStudent}
 								id="student"
-								onChange={(e) =>
-									setVisibleStudent(!visibleStudent)
-								}
+								onChange={(e) => setVisibleStudent(!visibleStudent)}
 							/>
 						</div>
 						<div className="form-group checkbox-inline">
@@ -193,9 +184,7 @@ const PostForm = ({
 								checked={visibleFaculty ? true : false}
 								value={visibleFaculty}
 								id="prof"
-								onChange={(e) =>
-									setVisibleProf(!visibleFaculty)
-								}
+								onChange={(e) => setVisibleProf(!visibleFaculty)}
 							/>
 						</div>
 						<div className="form-group checkbox-inline">
@@ -206,16 +195,11 @@ const PostForm = ({
 								checked={visibleAlumni ? true : false}
 								value={visibleAlumni}
 								id="alumni"
-								onChange={(e) =>
-									setVisibleAlumni(!visibleAlumni)
-								}
+								onChange={(e) => setVisibleAlumni(!visibleAlumni)}
 							/>
 						</div>
 						<div className="form-group">
-							<p
-								style={{ fontSize: "1.2rem" }}
-								className="secondary-text"
-							>
+							<p style={{ fontSize: "1.2rem" }} className="secondary-text">
 								Select Channel
 							</p>
 							<select
@@ -223,27 +207,24 @@ const PostForm = ({
 								id="channel"
 								className="form-dropdown"
 								value={channel}
-								onChange={(event) =>
-									setChannel(event.target.value)
-								}
+								onChange={(event) => setChannel(event.target.value)}
 							>
-								<option>
-									Choose a Channel
-								</option>
-								{channels !== null && channels.map((c) => {
-									return (
-										<option value={c.name} key={c._id}>
-											{c.name}
-										</option>
-									);
-								})}
+								<option>Choose a Channel</option>
+								{channels !== null &&
+									channels.map((c) => {
+										return (
+											<option value={c.name} key={c._id}>
+												{c.name}
+											</option>
+										);
+									})}
 							</select>
 						</div>
 					</div>
 					<div className="back-submit-buttons">
 						<Link
 							className="btn btn-light my-1"
-							to="/feed/topic/Placements"
+							to="/feed/topic/Mentorship"
 							style={{ width: "40%" }}
 						>
 							Go Back
@@ -257,10 +238,7 @@ const PostForm = ({
 				</form>
 			</div>
 			{text !== "" && (
-				<div
-					className="container preview"
-					style={{ marginBottom: "2em" }}
-				>
+				<div className="container preview" style={{ marginBottom: "2em" }}>
 					<p>
 						<strong>Preview:</strong>
 					</p>
@@ -295,9 +273,7 @@ const PostForm = ({
 					sx={{ width: "100%" }}
 					variant="filled"
 				>
-					{requireApproval
-						? "Post Request Error"
-						: "Create Post Error"}
+					{requireApproval ? "Post Request Error" : "Create Post Error"}
 				</Alert>
 			</Snackbar>
 		</React.Fragment>

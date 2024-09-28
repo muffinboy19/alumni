@@ -92,7 +92,7 @@ const Navbar = ({
 				</Link>
 			</li>
 			<li>
-				<Link to="/feed/topic/Placements?search=" className="navbar-link">
+				<Link to="/feed/topic/Mentorship?search=" className="navbar-link">
 					<span className="hide-sm">Feed</span>
 				</Link>
 			</li>
@@ -158,7 +158,7 @@ const Navbar = ({
 			</li>
 
 			<li>
-				<Link to="/feed/topic/Placements?search=" className="navbar-link">
+				<Link to="/feed/topic/Mentorship?search=" className="navbar-link">
 					<span className="hide-sm">Feed</span>
 				</Link>
 			</li>
