@@ -71,6 +71,7 @@ const Job = () => {
 						marginRight: "30px",
 						backgroundColor: "#f8f9fa",
 						borderColor: "#f8f9fa",
+						border: "1px solid black",
 					}}
 				>
 					<Link className="btn my-1" to="/archiveJobs">
@@ -81,9 +82,11 @@ const Job = () => {
 					<div
 						className="row"
 						style={{
+							display: "flex",
 							justifyContent: "center",
 							backgroundColor: "#f8f9fa",
 							borderColor: "#f8f9fa",
+							border: "1px solid black",
 						}}
 					>
 						<Link className="btn my-1" to="/createjob">
