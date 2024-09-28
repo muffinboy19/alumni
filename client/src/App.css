@@ -45,8 +45,6 @@ body {
 
 .my-container {
 	max-width: 1500px;
-	display: flex;
-	justify-content: center;
 }
 
 /* general properties */
@@ -480,6 +478,9 @@ input,
 .post-form-container {
 	margin: 2em 0;
 	text-align: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 .form-header {
 	text-align: center;
