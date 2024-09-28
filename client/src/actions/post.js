@@ -41,7 +41,7 @@ export const getPosts = (query, channel_name) => async (dispatch) => {
 // like/un-like a post
 export const toggleLike = (post_id) => async (dispatch) => {
 	try {
-		const res = await axios.post(`/api/posts/${post_id}/likes`);
+		const res = await axios.post("/api/posts/${post_id}/likes");
 		dispatch({
 			type: TOGGLE_LIKE,
 			payload: res.data,
