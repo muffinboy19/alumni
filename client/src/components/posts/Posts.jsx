@@ -171,10 +171,10 @@ const Posts = ({
 									placeholder="Search here..."
 									className="col-9 search-input posts-top-item"
 									value={search}
-									onChange={(e) => setSearch(e.target.value)}
+									// onChange={(e) => setSearch(e.target.value)}
 								/>
 								<input
-									type="submit"
+									// type="submit"
 									value="Search"
 									className="btn btn-primary col-3 posts-top-item"
 									// onClick={searchPosts}
